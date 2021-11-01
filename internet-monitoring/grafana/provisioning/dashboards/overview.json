@@ -24,7 +24,7 @@
   "gnetId": 11529,
   "graphTooltip": 0,
   "id": 5,
-  "iteration": 1635749641279,
+  "iteration": 1635751259693,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -971,7 +971,9 @@
   "refresh": "5s",
   "schemaVersion": 31,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "prometheus"
+  ],
   "templating": {
     "list": [
       {
@@ -1076,12 +1078,10 @@
             "$__all"
           ]
         },
-        "datasource": "Prometheus",
+        "datasource": "prometheus",
         "definition": "",
         "description": null,
-        "error": {
-          "message": "Datasource named Prometheus was not found"
-        },
+        "error": null,
         "hide": 2,
         "includeAll": true,
         "label": null,
@@ -1132,8 +1132,8 @@
       "30d"
     ]
   },
-  "timezone": "",
-  "title": "Overview",
+  "timezone": "browser",
+  "title": "Overview Copy",
   "uid": "BcVl_4WRz",
-  "version": 4
+  "version": 6
 }
