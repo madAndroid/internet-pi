@@ -22,12 +22,12 @@ scrape_configs:
     static_configs:
       - targets: ['speedtest:9798']
 
-{% if shelly_plug_enable %}
-  - job_name: 'shelly-plug'
+{% if shelly_enable %}
+  - job_name: 'shelly'
     metrics_path: /metrics
     scrape_interval: 1m
     static_configs:
-      - targets: ['172.17.0.1:9924']
+      - targets: ['172.17.0.1:9123']
 {% endif %}
 
 {% if airgradient_enable %}
@@ -53,6 +53,28 @@ scrape_configs:
     file_sd_configs:
       - files:
           - pinghosts.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '(.*);(.*)'  # first is the url, thus unique for instance
+        target_label: instance
+        replacement: $1
+      - source_labels: [__address__]
+        regex: '(.*);(.*)'  # second is humanname to use in charts
+        target_label: humanname
+        replacement: $2
+      - source_labels: [instance]
+        target_label: __param_target
+      - target_label: __address__
+        replacement: ping:9115  # The blackbox exporter's real hostname:port.
+
+  - job_name: 'local-hosts'
+    metrics_path: /probe
+    scrape_interval: {{ monitoring_ping_interval }}
+    params:
+      module: [icmp]  # Look for a HTTP 200 response.
+    file_sd_configs:
+      - files:
+          - localhosts.yaml
     relabel_configs:
       - source_labels: [__address__]
         regex: '(.*);(.*)'  # first is the url, thus unique for instance

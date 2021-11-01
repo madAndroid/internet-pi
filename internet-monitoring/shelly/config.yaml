@@ -1,0 +1,16 @@
+port: 9123
+requestTimeout: 5s
+scrapeInterval: 60s
+devices:
+  - IPAddress: "192.168.88.151"
+    displayName: "OfficePlug"
+    type: "1pm"
+  - IPAddress: "192.168.88.152"
+    displayName: "LoungePlug"
+    type: "1pm"
+  - IPAddress: "192.168.88.153"
+    displayName: "BedroomPlug"
+    type: "1pm"
+  - IPAddress: "192.168.88.160"
+    displayName: "FamilyRoomPlug"
+    type: "1pm"
