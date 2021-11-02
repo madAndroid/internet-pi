@@ -23,8 +23,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 11529,
   "graphTooltip": 0,
-  "id": 5,
-  "iteration": 1635751259693,
+  "iteration": 1635841046255,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -126,8 +125,8 @@
       "datasource": "prometheus",
       "fontSize": "100%",
       "gridPos": {
-        "h": 12,
-        "w": 9,
+        "h": 8,
+        "w": 11,
         "x": 13,
         "y": 0
       },
@@ -144,6 +143,7 @@
       },
       "styles": [
         {
+          "$$hashKey": "object:276",
           "alias": "Time",
           "align": "auto",
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
@@ -151,6 +151,7 @@
           "type": "hidden"
         },
         {
+          "$$hashKey": "object:277",
           "alias": "1=UP, 0=DOWN",
           "align": "auto",
           "colorMode": "row",
@@ -170,6 +171,7 @@
           "unit": "short"
         },
         {
+          "$$hashKey": "object:278",
           "alias": "",
           "align": "auto",
           "colorMode": null,
@@ -186,6 +188,7 @@
           "unit": "short"
         },
         {
+          "$$hashKey": "object:279",
           "alias": "",
           "align": "auto",
           "colorMode": null,
@@ -203,104 +206,19 @@
       ],
       "targets": [
         {
-          "expr": "probe_success{instance!~\"(desktop|macmini).+\"}",
+          "exemplar": true,
+          "expr": "sort(probe_success{job=\"essential-hosts\",humanname!~\"^(lab-kvm).+\"})",
           "format": "table",
           "instant": true,
+          "interval": "",
           "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
-      "title": "Bare Metal Server Probes (Up/Down) - Current",
-      "transform": "table",
-      "type": "table-old"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "0": {
-                  "text": "OK"
-                }
-              },
-              "type": "value"
-            },
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "OK"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#d44a3a",
-                "value": null
-              },
-              {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": 3000
-              },
-              {
-                "color": "#299c46",
-                "value": 3600
-              }
-            ]
-          },
-          "unit": "dtdurations"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 2,
-        "x": 22,
-        "y": 0
-      },
-      "id": 120,
-      "interval": null,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.2.0",
-      "targets": [
-        {
-          "expr": "bottomk(1, sum by (kubernetes_node) (time() - node_boot_time_seconds))",
-          "format": "time_series",
-          "instant": true,
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Last Restart",
-      "type": "stat"
+      "title": "Essential Hosts",
+      "transform": "table",
+      "type": "table-old"
     },
     {
       "aliasColors": {},
@@ -417,23 +335,24 @@
       "datasource": "prometheus",
       "fontSize": "100%",
       "gridPos": {
-        "h": 5,
+        "h": 7,
         "w": 11,
         "x": 13,
-        "y": 12
+        "y": 8
       },
-      "id": 116,
+      "id": 130,
+      "links": [],
       "pageSize": null,
-      "pluginVersion": "6.3.4",
+      "repeatDirection": "h",
       "scroll": true,
       "showHeader": true,
       "sort": {
-        "col": 0,
-        "desc": true
+        "col": 4,
+        "desc": false
       },
       "styles": [
         {
-          "$$hashKey": "object:87785",
+          "$$hashKey": "object:41",
           "alias": "Time",
           "align": "auto",
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
@@ -441,28 +360,28 @@
           "type": "hidden"
         },
         {
-          "$$hashKey": "object:87786",
-          "alias": "Time Left",
+          "$$hashKey": "object:42",
+          "alias": "1=UP, 0=DOWN",
           "align": "auto",
-          "colorMode": "cell",
+          "colorMode": "row",
           "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
+            "#E0B400",
+            "#E0B400",
+            "#37872D"
           ],
-          "decimals": 2,
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
           "pattern": "Value",
           "thresholds": [
-            "604800",
-            "1814400",
-            "7776000"
+            "0",
+            "1"
           ],
           "type": "number",
-          "unit": "dtdurations"
+          "unit": "short"
         },
         {
-          "$$hashKey": "object:87787",
-          "alias": "Certificate",
+          "$$hashKey": "object:43",
+          "alias": "",
           "align": "auto",
           "colorMode": null,
           "colors": [
@@ -472,91 +391,197 @@
           ],
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "decimals": 2,
-          "mappingType": 1,
-          "pattern": "Metric",
+          "pattern": "__name__",
           "thresholds": [],
-          "type": "string",
+          "type": "hidden",
           "unit": "short"
+        },
+        {
+          "$$hashKey": "object:44",
+          "alias": "",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sort(probe_success{job=\"lab-hosts\"})",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Lab hosts",
+      "transform": "table",
+      "type": "table-old"
+    },
+    {
+      "datasource": "prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              },
+              {
+                "id": "custom.align",
+                "value": null
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time Left"
+              },
+              {
+                "id": "unit",
+                "value": "dtdurations"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "custom.align",
+                "value": null
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(245, 54, 54, 0.9)",
+                      "value": null
+                    },
+                    {
+                      "color": "rgba(237, 129, 40, 0.89)",
+                      "value": 604800
+                    },
+                    {
+                      "color": "rgba(50, 172, 45, 0.97)",
+                      "value": 1814400
+                    },
+                    {
+                      "value": 7776000
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Metric"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Certificate"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align",
+                "value": null
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 11,
+        "x": 13,
+        "y": 15
+      },
+      "id": 116,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "8.2.0",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sort_desc( sum(probe_ssl_earliest_cert_expiry - time()) BY (instance) )",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
       "title": "SSL cert expiry",
-      "transform": "timeseries_to_rows",
-      "type": "table-old"
-    },
-    {
-      "columns": [],
-      "datasource": "prometheus",
-      "fontSize": "100%",
-      "gridPos": {
-        "h": 4,
-        "w": 11,
-        "x": 13,
-        "y": 17
-      },
-      "id": 115,
-      "pageSize": null,
-      "pluginVersion": "6.3.4",
-      "scroll": true,
-      "showHeader": true,
-      "sort": {
-        "col": 0,
-        "desc": true
-      },
-      "styles": [
+      "transformations": [
         {
-          "$$hashKey": "object:87324",
-          "alias": "Time",
-          "align": "auto",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "pattern": "Time",
-          "type": "hidden"
-        },
-        {
-          "$$hashKey": "object:87325",
-          "alias": "Time Left",
-          "align": "auto",
-          "colorMode": "cell",
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "decimals": 2,
-          "pattern": "Value",
-          "thresholds": [
-            "604800",
-            "1814400",
-            "7776000"
-          ],
-          "type": "number",
-          "unit": "dtdurations"
-        },
-        {
-          "$$hashKey": "object:87326",
-          "alias": "Certificate",
-          "align": "auto",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 2,
-          "mappingType": 1,
-          "pattern": "Metric",
-          "thresholds": [],
-          "type": "string",
-          "unit": "short"
+          "id": "seriesToRows",
+          "options": {
+            "reducers": []
+          }
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "LE certs cert-manager",
-      "transform": "timeseries_to_rows",
-      "type": "table-old"
+      "type": "table"
     },
     {
       "aliasColors": {},
@@ -1135,5 +1160,5 @@
   "timezone": "browser",
   "title": "Overview",
   "uid": "xtkCtBkiz",
-  "version": 7
+  "version": 5
 }
