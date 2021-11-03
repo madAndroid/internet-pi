@@ -110,3 +110,14 @@ scrape_configs:
         target_label: __param_target
       - target_label: __address__
         replacement: ping:9115  # The blackbox exporter's real hostname:port.
+
+  - job_name: 'hass'
+    scrape_interval: 10s
+    scheme: https
+    metrics_path: /api/prometheus
+    tls_config:
+      insecure_skip_verify: true
+    bearer_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIyYjNhMzY1N2NiN2Q0ZjhkYTdhM2ZhYzVhZWJkNTY4MCIsImlhdCI6MTYzNTkyMzA2OCwiZXhwIjoxOTUxMjgzMDY4fQ.onoyissJySkVrQVckg8NQfFlNzKgkEVngzaOgRan1cI"
+    static_configs:
+      - targets:
+        - "hass.int.stangl.co.za"
