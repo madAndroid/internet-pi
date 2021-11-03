@@ -23,7 +23,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 11529,
   "graphTooltip": 0,
-  "iteration": 1635841046255,
+  "iteration": 1635938650481,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -76,17 +76,33 @@
               },
               {
                 "color": "#EAB839",
-                "value": 600
+                "value": 1200
               },
               {
                 "color": "red",
-                "value": 800
+                "value": 2000
               }
             ]
           },
           "unit": "watt"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SolarDB"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -1160,5 +1176,5 @@
   "timezone": "browser",
   "title": "Overview",
   "uid": "xtkCtBkiz",
-  "version": 5
+  "version": 6
 }

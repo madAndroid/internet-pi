@@ -111,6 +111,31 @@ scrape_configs:
       - target_label: __address__
         replacement: ping:9115  # The blackbox exporter's real hostname:port.
 
+  - job_name: 'shelly-devices'
+    metrics_path: /probe
+    scrape_interval: {{ monitoring_ping_interval }}
+    params:
+      module: [icmp]  # Look for a HTTP 200 response.
+    static_configs:
+      - targets:
+          - office-plug.int.stangl.co.za
+          - lounge-plug.int.stangl.co.za
+          - main-bedroom-plug-OLD.int.stangl.co.za
+          #- kitchen-plug.int.stangl.co.za
+          #- main-bedroom-plug-NEW.int.stangl.co.za
+          #- fridge-plug.int.stangl.co.za
+          #- jax-bedroom-plug.int.stangl.co.za
+          - family-room-plug.int.stangl.co.za
+          #- maid-room-plug.int.stangl.co.za
+          - solar-db-em.int.stangl.co.za
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: ping:9115
+
   - job_name: 'hass'
     scrape_interval: 10s
     scheme: https
