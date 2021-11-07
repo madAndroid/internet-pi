@@ -146,3 +146,8 @@ scrape_configs:
     static_configs:
       - targets:
         - "hass.int.stangl.co.za"
+
+  - job_name: 'nodes'
+    static_configs:
+      - targets:
+        - 'pihole.int.stangl.co.za:9100'
