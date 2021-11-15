@@ -1,6 +1,6 @@
 port: 9123
 requestTimeout: 5s
-scrapeInterval: 60s
+scrapeInterval: 10s
 devices:
   - IPAddress: "192.168.88.151"
     displayName: "OfficePlug"
