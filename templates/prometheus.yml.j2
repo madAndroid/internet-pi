@@ -120,13 +120,12 @@ scrape_configs:
       - targets:
           - office-plug.int.stangl.co.za
           - lounge-plug.int.stangl.co.za
-          - main-bedroom-plug-OLD.int.stangl.co.za
-          #- kitchen-plug.int.stangl.co.za
-          #- main-bedroom-plug-NEW.int.stangl.co.za
-          #- fridge-plug.int.stangl.co.za
-          #- jax-bedroom-plug.int.stangl.co.za
+          - main-bedroom-plug.int.stangl.co.za
+          - kitchen-appliances.int.stangl.co.za
+          - fridge-plug.int.stangl.co.za
+          - jax-bedroom-plug.int.stangl.co.za
           - family-room-plug.int.stangl.co.za
-          #- maid-room-plug.int.stangl.co.za
+          - maids-room-plug.int.stangl.co.za
           - solar-db-em.int.stangl.co.za
     relabel_configs:
       - source_labels: [__address__]
