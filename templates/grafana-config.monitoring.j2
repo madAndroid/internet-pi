@@ -1,3 +1,7 @@
 GF_SECURITY_ADMIN_PASSWORD={{ monitoring_grafana_admin_password | default(omit) }}
 GF_USERS_ALLOW_SIGN_UP=false
 GF_INSTALL_PLUGINS=flant-statusmap-panel,ae3e-plotly-panel
+GF_DATABASE_TYPE=postgres
+GF_DATABASE_HOST=192.168.88.110:5432
+GF_DATABASE_USER=grafana
+GF_DATABASE_PASSWORD={{ monitoring_grafana_db_password | default('grafana') }}
