@@ -16,6 +16,7 @@ monitoring_ping_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - https://nas.int.stangl.co.za/;NAS-Media
   - https://nas-storage.int.stangl.co.za/;NAS-Storage
   - https://gateway.stangl.co.za;UDM-Gateway
+  - https://cloudkey.int.stangl.co.za;Unifi-Protect
   - https://hass.int.stangl.co.za;Home-Assistant
   - http://pihole.int.stangl.co.za;Pi-Hole
 
