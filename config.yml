@@ -18,6 +18,7 @@ monitoring_ping_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - https://gateway.stangl.co.za;UDM-Gateway
   - https://cloudkey.int.stangl.co.za;Unifi-Protect
   - https://hass.int.stangl.co.za;Home-Assistant
+  - https://grafana.int.stangl.co.za;Grafana
   - http://pihole.int.stangl.co.za;Pi-Hole
 
 monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
