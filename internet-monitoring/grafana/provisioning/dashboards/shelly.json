@@ -144,8 +144,12 @@
         },
         "targets": [
           {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P1809F7CD0C75ACF3"
+            },
             "exemplar": true,
-            "expr": "shelly_power{name!~\"SolarDB\"}",
+            "expr": "shelly_power{name!~\"MainDB-Channel-0\"}",
             "interval": "",
             "legendFormat": "{{ name }}",
             "queryType": "randomWalk",
@@ -1218,7 +1222,8 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
+                  "color": "green",
+                  "value": null
                 },
                 {
                   "color": "#EAB839",
@@ -1311,7 +1316,8 @@
             "placement": "bottom"
           },
           "tooltip": {
-            "mode": "single"
+            "mode": "single",
+            "sort": "none"
           }
         },
         "targets": [
@@ -1336,13 +1342,13 @@
       "list": []
     },
     "time": {
-      "from": "now-15m",
+      "from": "now-3h",
       "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "Shelly Devices",
     "uid": "qdNR0pzgk",
-    "version": 5,
+    "version": 6,
     "weekStart": ""
   }
