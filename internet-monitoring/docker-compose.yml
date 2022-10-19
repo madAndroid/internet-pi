@@ -79,7 +79,7 @@ services:
       - 9123
     ports:
       - 9123:9123
-    image: madandroid/shelly-prometheus-exporter:arm32v7-0.2.1
+    image: madandroid/shelly-prometheus-exporter:arm32v7-0.2.3
     restart: always
     volumes:
       - ./shelly/config.yaml:/app/config.yaml
