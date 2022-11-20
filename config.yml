@@ -53,3 +53,100 @@ airgradient_enable: false
 
 # Starlink configuration. (Also requires `monitoring_enable`)
 starlink_enable: false
+
+prometheus_monitor_prometheus: true
+
+domain_name_enable: false
+
+prometheus_node_exporter_targets: []
+
+prometheus_extra_scrape_configs: >
+  - job_name: 'essential-hosts'
+    metrics_path: /probe
+    scrape_interval: 60s
+    params:
+      module: [icmp]  # Look for a HTTP 200 response.
+    file_sd_configs:
+      - files:
+          - essential-hosts.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '(.*);(.*)'  # first is the url, thus unique for instance
+        target_label: instance
+        replacement: $1
+      - source_labels: [__address__]
+        regex: '(.*);(.*)'  # second is humanname to use in charts
+        target_label: humanname
+        replacement: $2
+      - source_labels: [instance]
+        target_label: __param_target
+      - target_label: __address__
+        replacement: ping:9115  # The blackbox exporter's real hostname:port.
+
+  - job_name: 'lab-hosts'
+    metrics_path: /probe
+    scrape_interval: 60s
+    params:
+      module: [icmp]  # Look for a HTTP 200 response.
+    file_sd_configs:
+      - files:
+          - lab-hosts.yaml
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '(.*);(.*)'  # first is the url, thus unique for instance
+        target_label: instance
+        replacement: $1
+      - source_labels: [__address__]
+        regex: '(.*);(.*)'  # second is humanname to use in charts
+        target_label: humanname
+        replacement: $2
+      - source_labels: [instance]
+        target_label: __param_target
+      - target_label: __address__
+        replacement: ping:9115  # The blackbox exporter's real hostname:port.
+
+  - job_name: 'shelly-devices'
+    metrics_path: /probe
+    scrape_interval: 60s
+    params:
+      module: [icmp]  # Look for a HTTP 200 response.
+    static_configs:
+      - targets:
+          - office-plug.int.stangl.co.za
+          - lounge-plug.int.stangl.co.za
+          - main-bedroom-plug.int.stangl.co.za
+          - coffee-station-plug.int.stangl.co.za
+          - kitchen-appliances.int.stangl.co.za
+          - kitchen-counter-plug.int.stangl.co.za
+          - fridge-plug.int.stangl.co.za
+          - jax-bedroom-plug.int.stangl.co.za
+          - family-room-plug.int.stangl.co.za
+          - family-room-lights.int.stangl.co.za
+          - maids-room-plug.int.stangl.co.za
+          #- solar-db-em.int.stangl.co.za
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: ping:9115
+
+  - job_name: 'hass'
+    scrape_interval: 10s
+    scheme: https
+    metrics_path: /api/prometheus
+    tls_config:
+      insecure_skip_verify: true
+    bearer_token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIyYjNhMzY1N2NiN2Q0ZjhkYTdhM2ZhYzVhZWJkNTY4MCIsImlhdCI6MTYzNTkyMzA2OCwiZXhwIjoxOTUxMjgzMDY4fQ.onoyissJySkVrQVckg8NQfFlNzKgkEVngzaOgRan1cI"
+    static_configs:
+      - targets:
+        - "hass.int.stangl.co.za"
+
+  - job_name: 'nodes'
+    static_configs:
+      - targets:
+        - 'pihole.int.stangl.co.za:9100'
+        - 'monitoring.int.stangl.co.za:9100'
+        - 'music.int.stangl.co.za:9100'
+        - 'hass.int.stangl.co.za:9100'
