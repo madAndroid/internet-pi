@@ -18,7 +18,9 @@ monitoring_ping_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - https://gateway.stangl.co.za;UDM-Gateway
   - https://cloudkey.int.stangl.co.za;Unifi-Protect
   - https://hass.int.stangl.co.za;Home-Assistant
+  - https://grafana.int.stangl.co.za;Grafana
   - http://pihole.int.stangl.co.za;Pi-Hole
+  - http://smh.int.stangl.co.za;Solar-Monitoring-Hub
 
 monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - 192.168.88.245;lab-kvm-01
@@ -41,6 +43,9 @@ monitoring_essential_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - pihole.int.stangl.co.za;Pi-Hole
   - gateway.stangl.co.za;UDM-Gateway
   - hass.int.stangl.co.za;Home-Assistant
+  - smh.int.stangl.co.za;Solar-Monitoring-Hub
+  - monitoring.int.stangl.co.za;Monitoring-Pi
+
 
 # Shelly Plug configuration. (Also requires `monitoring_enable`)
 shelly_enable: true
