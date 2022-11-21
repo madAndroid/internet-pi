@@ -74,7 +74,7 @@
       "id": 15,
       "interval": null,
       "links": [],
-      "maxDataPoints": 50000,
+      "maxDataPoints": 10000,
       "options": {
         "orientation": "horizontal",
         "reduceOptions": {
@@ -155,7 +155,7 @@
       "id": 10,
       "interval": null,
       "links": [],
-      "maxDataPoints": 50000,
+      "maxDataPoints": 10000,
       "options": {
         "orientation": "horizontal",
         "reduceOptions": {
@@ -231,7 +231,7 @@
       "id": 12,
       "interval": null,
       "links": [],
-      "maxDataPoints": 50000,
+      "maxDataPoints": 10000,
       "options": {
         "orientation": "horizontal",
         "reduceOptions": {
@@ -324,7 +324,7 @@
       },
       "id": 6,
       "links": [],
-      "maxDataPoints": 50000,
+      "maxDataPoints": 10000,
       "options": {
         "graph": {},
         "legend": {
