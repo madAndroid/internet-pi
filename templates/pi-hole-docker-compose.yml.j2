@@ -19,12 +19,16 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
       - "67:67/udp"
+{% if pihole_web_port and pihole_web_port != '80' %}
+      - "{{ pihole_web_port }}:80/tcp"
+{% else %}
 {% if domain_name_enable and domain_name and domain_pihole %}
       - "38080:80/tcp"
 {% else %}
       - "80:80/tcp"
 {% endif %}
       - "443:443/tcp"
+{% endif %}
     environment:
       TZ: '{{ pihole_timezone }}'
       WEBPASSWORD: '{{ pihole_password }}'

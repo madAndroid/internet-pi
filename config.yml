@@ -3,10 +3,11 @@
 config_dir: '~'
 
 # Pi-hole configuration.
-pihole_enable: false
-#pihole_hostname: pihole
-#pihole_timezone: America/Chicago
-#pihole_password: "change-this-password"
+pihole_enable: true
+pihole_hostname: pihole
+pihole_timezone: Africa/Johannesburg
+pihole_password: "JPdk11Kv"
+pihole_web_port: 8080
 
 # Internet monitoring configuration.
 monitoring_enable: true
@@ -63,12 +64,16 @@ prometheus_monitor_prometheus: true
 
 domain_name_enable: false
 
-prometheus_node_exporter_targets: []
+#prometheus_node_exporter_targets: []
+#  - 'pihole.int.stangl.co.za:9100'
+#  - 'monitoring.int.stangl.co.za:9100'
+#  - 'music.int.stangl.co.za:9100'
+#  - 'hass.int.stangl.co.za:9100'
 
 prometheus_extra_scrape_configs: >
   - job_name: 'essential-hosts'
     metrics_path: /probe
-    scrape_interval: 60s
+    scrape_interval: 5s
     params:
       module: [icmp]  # Look for a HTTP 200 response.
     file_sd_configs:
@@ -90,7 +95,7 @@ prometheus_extra_scrape_configs: >
 
   - job_name: 'lab-hosts'
     metrics_path: /probe
-    scrape_interval: 60s
+    scrape_interval: 5s
     params:
       module: [icmp]  # Look for a HTTP 200 response.
     file_sd_configs:
@@ -112,7 +117,7 @@ prometheus_extra_scrape_configs: >
 
   - job_name: 'shelly-devices'
     metrics_path: /probe
-    scrape_interval: 60s
+    scrape_interval: 5s
     params:
       module: [icmp]  # Look for a HTTP 200 response.
     static_configs:
