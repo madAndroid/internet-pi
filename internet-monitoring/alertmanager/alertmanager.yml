@@ -5,9 +5,6 @@ route:
   routes:
   - receiver: slack_homelab
 
-global:
-  slack_api_url: https://hooks.slack.com/services/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
-
 receivers:
   - name: 'slack_homelab'
     slack_configs:
