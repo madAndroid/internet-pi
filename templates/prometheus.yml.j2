@@ -9,6 +9,12 @@ global:
 rule_files:
   - 'alert.rules'
 
+alerting:
+  alertmanagers:
+    - scheme: http
+      static_configs:
+        - targets: [ 'alertmanager:9093' ]
+
 scrape_configs:
 {% if prometheus_monitor_prometheus %}
   - job_name: 'prometheus'

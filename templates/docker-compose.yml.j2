@@ -54,6 +54,22 @@ services:
       - VIRTUAL_PORT=9090
 {% endif %}
 
+  alertmanager:
+    image: prom/alertmanager:v0.24.0
+    restart: always
+    ports:
+      - "9093:9093"
+    depends_on:
+      - prometheus
+    volumes:
+      - ./alertmanager/:/config
+      #- alertmanager_data:/data
+    command:
+      - '--config.file=/config/alertmanager.yml'
+      - '--log.level=debug'
+    networks:
+      - back-tier
+
   grafana:
     image: grafana/grafana:8.5.10
     restart: always

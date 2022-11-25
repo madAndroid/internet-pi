@@ -1,0 +1,12 @@
+route:
+  receiver: 'slack_homelab'
+  repeat_interval: 4h
+  group_by: ['alertname', 'job']
+  routes:
+  - receiver: slack_homelab
+
+receivers:
+  - name: 'slack_homelab'
+    slack_configs:
+    - api_url: https://hooks.slack.com/services/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
+      channel: '#monitoring'
