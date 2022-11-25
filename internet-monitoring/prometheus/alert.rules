@@ -4,7 +4,7 @@ groups:
 
   # Alert for any instance that is unreachable for >5 minutes.
   - alert: service_down
-    expr: up{job="essential-hosts"} == 0
+    expr: up{job=~"(essential-hosts|hass)"} == 0
     for: 2m
     labels:
       severity: page
