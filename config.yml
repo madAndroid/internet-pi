@@ -156,7 +156,6 @@ prometheus_extra_scrape_configs: >
   - job_name: 'nodes'
     static_configs:
       - targets:
-        - 'pihole.int.stangl.co.za:9100'
-        - 'monitoring.int.stangl.co.za:9100'
+        - 'zimaboard.int.stangl.co.za:9100'
         - 'music.int.stangl.co.za:9100'
         - 'hass.int.stangl.co.za:9100'
