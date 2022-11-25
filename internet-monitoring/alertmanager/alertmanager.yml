@@ -10,3 +10,4 @@ receivers:
     slack_configs:
     - api_url: https://hooks.slack.com/services/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
       channel: '#monitoring'
+      send_resolved: true
