@@ -41,12 +41,10 @@ monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
 
 monitoring_essential_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - cloudkey.int.stangl.co.za;CloudKey-NVR
-  - pihole.int.stangl.co.za;Pi-Hole
   - gateway.stangl.co.za;UDM-Gateway
   - hass.int.stangl.co.za;Home-Assistant
   - smh.int.stangl.co.za;Solar-Monitoring-Hub
-  - monitoring.int.stangl.co.za;Monitoring-Pi
-
+  - zimaboard.int.stangl.co.za;Zimaboard
 
 # Shelly Plug configuration. (Also requires `monitoring_enable`)
 shelly_enable: true
