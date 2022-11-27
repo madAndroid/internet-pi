@@ -27,6 +27,9 @@ services:
 {% endif %}
 
   prometheus:
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     image: prom/prometheus:v2.25.2
     restart: always
     volumes:
@@ -55,6 +58,9 @@ services:
 {% endif %}
 
   alertmanager:
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     image: prom/alertmanager:v0.24.0
     restart: always
     ports:
@@ -71,6 +77,9 @@ services:
       - back-tier
 
   grafana:
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     image: grafana/grafana:8.5.10
     restart: always
     volumes:
@@ -94,6 +103,9 @@ services:
 {% endif %}
 
   ping:
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     tty: true
     stdin_open: true
     expose:
@@ -110,6 +122,9 @@ services:
       - back-tier
 
   speedtest:
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     expose:
       - 9798
     ports:
@@ -122,6 +137,9 @@ services:
       - back-tier
 
   shelly:
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     expose:
       - 9123
     ports:

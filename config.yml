@@ -20,7 +20,7 @@ monitoring_ping_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - https://cloudkey.int.stangl.co.za;Unifi-Protect
   - https://hass.int.stangl.co.za;Home-Assistant
   - https://grafana.int.stangl.co.za;Grafana
-  - http://pihole.int.stangl.co.za;Pi-Hole
+  - https://pihole.int.stangl.co.za;Pi-Hole
   - http://smh.int.stangl.co.za;Solar-Monitoring-Hub
 
 monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
