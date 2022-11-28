@@ -28,7 +28,7 @@ services:
     environment:
       TZ: '{{ pihole_timezone }}'
       WEBPASSWORD: '{{ pihole_password }}'
-      ServerIP: '{{ ansible_facts['default_ipv4']['address'] }}'
+      ServerIP: 192.168.88.111
     networks:
       pihole_network:
         ipv4_address: 192.168.88.111
