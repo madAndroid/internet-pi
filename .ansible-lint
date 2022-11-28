@@ -2,3 +2,6 @@
 skip_list:
   - 'fqcn-builtins'
   - 'no-handler'
+
+warn_list:
+  - yaml[line-length]  # violations reported by yamllint.

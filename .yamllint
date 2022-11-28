@@ -9,6 +9,3 @@ rules:
 ignore: |
   .github/stale.yml
   secrets/*
-
-warn_list:
-  - yaml[line-length]  # Violations reported by yamllint.
