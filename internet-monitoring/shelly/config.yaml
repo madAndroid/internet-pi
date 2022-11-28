@@ -1,3 +1,4 @@
+---
 port: 9123
 requestTimeout: 5s
 scrapeInterval: 10s

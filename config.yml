@@ -48,7 +48,7 @@ monitoring_essential_hosts:  # [URL];[HUMAN_READABLE_NAME]
 
 # Shelly Plug configuration. (Also requires `monitoring_enable`)
 shelly_enable: true
-#shelly_plug_hostname: 192.168.88.34
+# shelly_plug_hostname: 192.168.88.34
 # shelly_plug_http_username: username
 # shelly_plug_http_password: "password"
 
