@@ -53,7 +53,7 @@
     content: "{{ lookup('community.sops.sops', item.src) }}"
     dest: "{{ config_dir }}/internet-monitoring/{{ item.dest }}"
     mode: 0644
-  #no_log: true  # avoid content to be written to log
+  # no_log: true  # avoid content to be written to log
   loop:
     - src: "{{ playbook_dir }}/secrets/alertmanager.enc.yml"
       dest: alertmanager/alertmanager.yml
