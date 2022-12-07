@@ -155,6 +155,8 @@ prometheus_extra_scrape_configs: >
         - "hass.int.stangl.co.za"
 
   - job_name: 'nodes'
+    scrape_interval: 30s
+    scrape_timeout: 15s
     static_configs:
       - targets:
         - 'zimaboard.int.stangl.co.za:9100'
