@@ -26,7 +26,8 @@ devices:
     type: "1pm"
   - IPAddress: "lounge-plug.int.stangl.co.za"
     displayName: "LoungePlug"
-    type: "1pm"
+    type: "1pmPlus"
+    generation: 2
   - IPAddress: "lounge-extra-plug.int.stangl.co.za"
     displayName: "LoungeExtraPlug"
     type: "1pm"
