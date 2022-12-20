@@ -1,6 +1,6 @@
 ---
 port: 9123
-requestTimeout: 5s
+requestTimeout: 8s
 scrapeInterval: 10s
 devices:
   - IPAddress: "coffee-station-plug.int.stangl.co.za"
