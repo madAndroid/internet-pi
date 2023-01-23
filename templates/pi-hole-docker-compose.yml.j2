@@ -13,7 +13,7 @@ networks:
 services:
   pihole:
     container_name: pihole
-    image: pihole/pihole:latest
+    image: pihole/pihole:{{ pihole_image_tag }}
     hostname: '{{ pihole_hostname }}'
     ports:
       - "53:53/tcp"
