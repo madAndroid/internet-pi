@@ -39,7 +39,8 @@ devices:
     type: "1pm"
   - IPAddress: "office-plug.int.stangl.co.za"
     displayName: "OfficePlug"
-    type: "1pm"
+    type: "1pmPlus"
+    generation: 2
   - IPAddress: "office-hvac.int.stangl.co.za"
     displayName: "OfficeHVAC"
     type: "1pm"
