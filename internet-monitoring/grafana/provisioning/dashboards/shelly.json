@@ -458,7 +458,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "exemplar": false,
-          "expr": "hass_sensor_battery_percent{domain=\"sensor\", entity=\"sensor.battery_state_of_charge\"}",
+          "expr": "hass_sensor_battery_percent{domain=\"sensor\", entity=\"sensor.battery_soc\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -764,7 +764,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "exemplar": false,
-          "expr": "hass_sensor_power_w{domain=\"sensor\", entity=\"sensor.pv_power\"}",
+          "expr": "hass_sensor_power_w{domain=\"sensor\", entity=\"sensor.pv_watts\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -836,7 +836,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "exemplar": false,
-          "expr": "hass_sensor_power_w{domain=\"sensor\", entity=\"sensor.load_power\"}",
+          "expr": "hass_sensor_power_w{domain=\"sensor\", entity=\"sensor.load_watts\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -968,7 +968,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "hass_sensor_power_w{domain=\"sensor\", entity=\"sensor.load_power\"}",
+          "expr": "hass_sensor_power_w{domain=\"sensor\", entity=\"sensor.load_watts\"}",
           "hide": false,
           "interval": "",
           "legendFormat": "Inverter load",
@@ -1211,7 +1211,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "hass_sensor_battery_percent{domain=\"sensor\", entity=\"sensor.battery_state_of_charge\"}",
+          "expr": "hass_sensor_battery_percent{domain=\"sensor\", entity=\"sensor.battery_soc\"}",
           "interval": "",
           "legendFormat": "Battery (combined)",
           "queryType": "randomWalk",
@@ -1399,6 +1399,6 @@
   "timezone": "",
   "title": "Shelly Devices",
   "uid": "qdNR0pzgk",
-  "version": 1938,
+  "version": 1937,
   "weekStart": ""
 }
