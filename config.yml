@@ -22,7 +22,8 @@ monitoring_ping_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - https://hass.int.stangl.co.za;Home-Assistant
   - https://grafana.int.stangl.co.za;Grafana
   - https://pihole.int.stangl.co.za;Pi-Hole
-  - http://smh.int.stangl.co.za;Solar-Monitoring-Hub
+  - http://stangl-solar.int.stangl.co.za;Solar-IO-Home
+  - http://ascendant-solar.int.stangl.co.za;Solar-IO-Office
 
 monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - 192.168.88.245;lab-kvm-01
@@ -44,7 +45,8 @@ monitoring_essential_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - cloudkey.int.stangl.co.za;CloudKey-NVR
   - gateway.stangl.co.za;UDM-Gateway
   - hass.int.stangl.co.za;Home-Assistant
-  - smh.int.stangl.co.za;Solar-Monitoring-Hub
+  - ascendant-solar.int.stangl.co.za;Solar-IO-Office
+  - stangl-solar.int.stangl.co.za;Solar-IO-Home
   - zimaboard.int.stangl.co.za;Zimaboard
 
 # Shelly Plug configuration. (Also requires `monitoring_enable`)
@@ -161,5 +163,5 @@ prometheus_extra_scrape_configs: >
     static_configs:
       - targets:
         - 'zimaboard.int.stangl.co.za:9100'
-        - 'music.int.stangl.co.za:9100'
         - 'hass.int.stangl.co.za:9100'
+        - 'plex.int.stangl.co.za:9100'
