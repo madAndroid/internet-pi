@@ -127,17 +127,21 @@ prometheus_extra_scrape_configs: >
           - family-room-plug.int.stangl.co.za
           - family-room-lights.int.stangl.co.za
           - fridge-plug.int.stangl.co.za
-          #- frontgate-maglock.int.stangl.co.za
+          - frontgate-strikelock.int.stangl.co.za
           - garage-lights.int.stangl.co.za
           - jax-bedroom-plug.int.stangl.co.za
+          - jax-desk-psu.int.stangl.co.za
           - kitchen-appliances.int.stangl.co.za
           - kitchen-counter-plug.int.stangl.co.za
           - lounge-plug.int.stangl.co.za
           - lounge-extra-plug.int.stangl.co.za
+          - lounge-equipment.int.stangl.co.za
           - main-bedroom-plug.int.stangl.co.za
           - main-db-em.int.stangl.co.za
           - office-plug.int.stangl.co.za
           - office-hvac.int.stangl.co.za
+          - shelly-office-pendant-light.int.stangl.co.za
+          - shelly-office-light-switch.int.stangl.co.za
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
