@@ -123,7 +123,7 @@ prometheus_extra_scrape_configs: >
       module: [icmp]  # Look for a HTTP 200 response.
     static_configs:
       - targets:
-          - coffee-station-plug.int.stangl.co.za
+          - dining-room-plus.int.stangl.co.za
           - family-room-plug.int.stangl.co.za
           - family-room-lights.int.stangl.co.za
           - fridge-plug.int.stangl.co.za

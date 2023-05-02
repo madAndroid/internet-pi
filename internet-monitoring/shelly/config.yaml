@@ -3,9 +3,10 @@ port: 9123
 requestTimeout: 8s
 scrapeInterval: 10s
 devices:
-  - IPAddress: "coffee-station-plug.int.stangl.co.za"
-    displayName: "CoffeeStation"
-    type: "1pm"
+  - IPAddress: "dining-room-plus.int.stangl.co.za"
+    displayName: "DiningRoom"
+    type: "1pmPlus"
+    generation: 2
   - IPAddress: "family-room-plug.int.stangl.co.za"
     displayName: "FamilyRoomPlug"
     type: "1pm"
