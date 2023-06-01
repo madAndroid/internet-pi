@@ -8,7 +8,7 @@ pihole_hostname: pihole
 pihole_timezone: Africa/Johannesburg
 pihole_password: "JPdk11Kv"
 pihole_web_port: 8080
-pihole_image_tag: 2023.05.1
+pihole_image_tag: 2023.05.2
 
 # Internet monitoring configuration.
 monitoring_enable: true
