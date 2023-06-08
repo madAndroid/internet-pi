@@ -618,7 +618,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "shelly_relay_state{name=\"CoffeeStation\"}",
+          "expr": "shelly_relay_state{name=\"DiningRoom\"}",
           "interval": "",
           "legendFormat": "",
           "range": true,
@@ -1399,6 +1399,6 @@
   "timezone": "",
   "title": "Shelly Devices",
   "uid": "qdNR0pzgk",
-  "version": 1938,
+  "version": 1941,
   "weekStart": ""
 }
