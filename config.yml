@@ -118,7 +118,8 @@ prometheus_extra_scrape_configs: >
 
   - job_name: 'shelly-devices'
     metrics_path: /probe
-    scrape_interval: 5s
+    scrape_interval: 10s
+    scrape_timeout: 8s
     params:
       module: [icmp]  # Look for a HTTP 200 response.
     static_configs:
@@ -127,15 +128,17 @@ prometheus_extra_scrape_configs: >
           - family-room-plug.int.stangl.co.za
           - family-room-lights.int.stangl.co.za
           - fridge-plug.int.stangl.co.za
-          # - frontgate-strikelock.int.stangl.co.za
+          - frontgate-strikelock.int.stangl.co.za
           - garage-lights.int.stangl.co.za
           - jax-bedroom-plug.int.stangl.co.za
+          - jax-bedroom-dimmer.int.stangl.co.za
           - jax-desk-psu.int.stangl.co.za
           - kitchen-appliances.int.stangl.co.za
           - kitchen-counter-plug.int.stangl.co.za
           - lounge-plug.int.stangl.co.za
           - lounge-extra-plug.int.stangl.co.za
           - lounge-equipment.int.stangl.co.za
+          - main-bedroom-dimmer.int.stangl.co.za
           - main-bedroom-plug.int.stangl.co.za
           - main-db-em.int.stangl.co.za
           - office-plug.int.stangl.co.za
