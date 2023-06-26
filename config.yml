@@ -42,11 +42,10 @@ monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - 192.168.88.135;k8s-node-05
 
 monitoring_essential_hosts:  # [URL];[HUMAN_READABLE_NAME]
-  - cloudkey.int.stangl.co.za;CloudKey-NVR
   - gateway.stangl.co.za;UDM-Gateway
   - hass.int.stangl.co.za;Home-Assistant
-  - ascendant-solar.int.stangl.co.za;Solar-IO-Office
-  - stangl-solar.int.stangl.co.za;Solar-IO-Home
+  - stangl-solar.int.stangl.co.za;Solar-Assist-Home
+  - ascendant-solar.int.stangl.co.za;Solar-Assist-Office
   - zimaboard.int.stangl.co.za;Zimaboard
 
 # Shelly Plug configuration. (Also requires `monitoring_enable`)

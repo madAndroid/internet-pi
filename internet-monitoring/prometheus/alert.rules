@@ -10,7 +10,16 @@ groups:
       severity: page
     annotations:
       summary: "Instance {{ $labels.instance }} down"
-      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 2 minutes."
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 30 seconds."
+
+  - alert: essential_host_down
+    expr: probe_success{job="essential-hosts"} == 0
+    for: 30s
+    labels:
+      severity: page
+    annotations:
+      summary: "Instance {{ $labels.instance }} down"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 30 seconds."
 
   - alert: high_load
     expr: node_load1 > 3.5
