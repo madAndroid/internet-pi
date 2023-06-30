@@ -151,6 +151,30 @@ services:
     networks:
       - back-tier
 
+  unpoller:
+    image: ghcr.io/unpoller/unpoller:v2.7.14
+    restart: always
+    ports:
+      - '9130:9130'
+    container_name: unpoller
+    networks:
+      - back-tier
+    environment:
+      - UP_INFLUXDB_DISABLE=true
+      - UP_POLLER_DEBUG=false
+      - UP_UNIFI_DYNAMIC=false
+      - UP_PROMETHEUS_HTTP_LISTEN=0.0.0.0:9130
+      - UP_PROMETHEUS_NAMESPACE=unpoller
+      - UP_UNIFI_CONTROLLER_0_USER=hass
+      - UP_UNIFI_CONTROLLER_0_PASS=Dr01dHAaccPW
+      - UP_UNIFI_CONTROLLER_0_SAVE_ALARMS=true
+      - UP_UNIFI_CONTROLLER_0_SAVE_ANOMALIES=true
+      - UP_UNIFI_CONTROLLER_0_SAVE_DPI=true
+      - UP_UNIFI_CONTROLLER_0_SAVE_EVENTS=true
+      - UP_UNIFI_CONTROLLER_0_SAVE_IDS=true
+      - UP_UNIFI_CONTROLLER_0_SAVE_SITES=true
+      - UP_UNIFI_CONTROLLER_0_URL=https://192.168.88.1
+
 #  nodeexp:
 #    privileged: true
 #    container_name: pihole.int.stangl.co.za

@@ -164,6 +164,12 @@ prometheus_extra_scrape_configs: >
       - targets:
         - "hass.int.stangl.co.za"
 
+  - job_name: 'unpoller'
+    scrape_interval: 10s
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['172.17.0.1:9130']
+
   - job_name: 'nodes'
     scrape_interval: 30s
     scrape_timeout: 15s
