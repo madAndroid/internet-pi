@@ -5,3 +5,7 @@ GF_DATABASE_TYPE=postgres
 GF_DATABASE_HOST=192.168.88.110:5432
 GF_DATABASE_USER=grafana
 GF_DATABASE_PASSWORD={{ monitoring_grafana_db_password | default('grafana') }}
+GF_AUTH_ANONYMOUS_ENABLED=true
+GF_AUTH_ANONYMOUS_ORG_NAME=Anonymous
+GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+GF_SERVER_ROOT_URL=https://grafana.int.stangl.co.za
