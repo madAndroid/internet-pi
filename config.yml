@@ -130,6 +130,7 @@ prometheus_extra_scrape_configs: >
           - fridge-plug.int.stangl.co.za
           - frontgate-strikelock.int.stangl.co.za
           - garage-lights.int.stangl.co.za
+          - gas-geyser.int.stangl.co.za
           - jax-bedroom-plug.int.stangl.co.za
           - jax-bedroom-dimmer.int.stangl.co.za
           - jax-desk-psu.int.stangl.co.za
