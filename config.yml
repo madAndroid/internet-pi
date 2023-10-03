@@ -65,11 +65,7 @@ prometheus_tsdb_retention_time: 2y
 
 domain_name_enable: false
 
-# prometheus_node_exporter_targets: []
-#  - 'pihole.int.stangl.co.za:9100'
-#  - 'monitoring.int.stangl.co.za:9100'
-#  - 'music.int.stangl.co.za:9100'
-#  - 'hass.int.stangl.co.za:9100'
+prometheus_node_exporter_targets: []
 
 prometheus_extra_scrape_configs: >
   - job_name: 'essential-hosts'
@@ -130,6 +126,7 @@ prometheus_extra_scrape_configs: >
           - fridge-plug.int.stangl.co.za
           - frontgate-strikelock.int.stangl.co.za
           - garage-lights.int.stangl.co.za
+          - gas-geyser.int.stangl.co.za
           - jax-bedroom-plug.int.stangl.co.za
           - jax-bedroom-dimmer.int.stangl.co.za
           - jax-desk-psu.int.stangl.co.za

@@ -15,7 +15,7 @@ networks:
 services:
 {% if domain_name_enable %}
   nginx-proxy:
-    image: nginxproxy/nginx-proxy
+    image: nginxproxy/nginx-proxy:latest
     restart: always
     ports:
       - "80:80"
@@ -23,6 +23,7 @@ services:
       - back-tier
       - front-tier
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
 {% endif %}
 
@@ -33,6 +34,7 @@ services:
     image: prom/prometheus:v2.44.0
     restart: always
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - ./prometheus/:/etc/prometheus/
       - prometheus_data:/prometheus
     command:
@@ -40,6 +42,7 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--web.enable-admin-api'
       - '--storage.tsdb.retention.time={{ prometheus_tsdb_retention_time }}'
+      - '--web.enable-admin-api'
       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
       - '--web.console.templates=/usr/share/prometheus/consoles'
     ports:
@@ -83,6 +86,7 @@ services:
     image: grafana/grafana:9.5.3
     restart: always
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     depends_on:
@@ -103,6 +107,11 @@ services:
 {% endif %}
 
   ping:
+    image: prom/blackbox-exporter:latest
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./blackbox/config:/config
     dns:
       - 8.8.8.8
       - 8.8.4.4
@@ -112,16 +121,18 @@ services:
       - 9115
     ports:
       - 9115:9115
-    image: prom/blackbox-exporter
-    restart: always
-    volumes:
-      - ./blackbox/config:/config
+    tty: true
+    stdin_open: true
     command:
       - '--config.file=/config/blackbox.yml'
     networks:
       - back-tier
 
   speedtest:
+    image: miguelndecarvalho/speedtest-exporter:v3.5.1
+    restart: always
+    environment:
+      - TZ='Africa/Johannesburg'
     dns:
       - 8.8.8.8
       - 8.8.4.4
@@ -129,14 +140,14 @@ services:
       - 9798
     ports:
       - 9798:9798
-    image: miguelndecarvalho/speedtest-exporter:v3.5.1
-    restart: always
-    environment:
-      - TZ='Africa/Johannesburg'
     networks:
       - back-tier
 
   shelly:
+    image: madandroid/shelly-prometheus-exporter:0.3.7
+    restart: always
+    volumes:
+      - ./shelly/config.yaml:/app/config.yaml
     dns:
       - 8.8.8.8
       - 8.8.4.4
@@ -144,10 +155,6 @@ services:
       - 9123
     ports:
       - 9123:9123
-    image: madandroid/shelly-prometheus-exporter:0.3.7
-    restart: always
-    volumes:
-      - ./shelly/config.yaml:/app/config.yaml
     networks:
       - back-tier
 
