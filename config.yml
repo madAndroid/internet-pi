@@ -65,11 +65,7 @@ prometheus_tsdb_retention_time: 2y
 
 domain_name_enable: false
 
-# prometheus_node_exporter_targets: []
-#  - 'pihole.int.stangl.co.za:9100'
-#  - 'monitoring.int.stangl.co.za:9100'
-#  - 'music.int.stangl.co.za:9100'
-#  - 'hass.int.stangl.co.za:9100'
+prometheus_node_exporter_targets: []
 
 prometheus_extra_scrape_configs: >
   - job_name: 'essential-hosts'
