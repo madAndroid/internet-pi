@@ -135,13 +135,14 @@ prometheus_extra_scrape_configs: >
           - lounge-plug.int.stangl.co.za
           - lounge-extra-plug.int.stangl.co.za
           - lounge-equipment.int.stangl.co.za
+          - lounge-light-switch.int.stangl.co.za
           - main-bedroom-dimmer.int.stangl.co.za
           - main-bedroom-plug.int.stangl.co.za
           - main-db-em.int.stangl.co.za
           - office-plug.int.stangl.co.za
           - office-hvac.int.stangl.co.za
-          - shelly-office-pendant-light.int.stangl.co.za
-          - shelly-office-light-switch.int.stangl.co.za
+          - office-pendant-light.int.stangl.co.za
+          - office-light-switch.int.stangl.co.za
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
