@@ -117,32 +117,47 @@ prometheus_extra_scrape_configs: >
     scrape_interval: 10s
     scrape_timeout: 8s
     params:
-      module: [icmp]  # Look for a HTTP 200 response.
+      module: [icmp]  # Look for ping response
     static_configs:
       - targets:
+          - dining-room-light.int.stangl.co.za
           - dining-room-plus.int.stangl.co.za
-          - family-room-plug.int.stangl.co.za
           - family-room-lights.int.stangl.co.za
+          - family-room-plug.int.stangl.co.za
           - fridge-plug.int.stangl.co.za
           - frontgate-strikelock.int.stangl.co.za
           - garage-lights.int.stangl.co.za
+          - garage-main-light-switch.int.stangl.co.za
+          - garage-plugs.int.stangl.co.za
           - gas-geyser.int.stangl.co.za
-          - jax-bedroom-plug.int.stangl.co.za
           - jax-bedroom-dimmer.int.stangl.co.za
+          - jax-bedroom-plug.int.stangl.co.za
           - jax-desk-psu.int.stangl.co.za
           - kitchen-appliances.int.stangl.co.za
           - kitchen-counter-plug.int.stangl.co.za
-          - lounge-plug.int.stangl.co.za
-          - lounge-extra-plug.int.stangl.co.za
+          - lounge-bulb-front-left.int.stangl.co.za
+          - lounge-bulb-front-right.int.stangl.co.za
+          - lounge-bulb-rear-left.int.stangl.co.za
+          - lounge-bulb-rear-right.int.stangl.co.za
           - lounge-equipment.int.stangl.co.za
+          - lounge-extra-plug.int.stangl.co.za
           - lounge-light-switch.int.stangl.co.za
+          - lounge-plug.int.stangl.co.za
+          - maids-room-plug.int.stangl.co.za
           - main-bedroom-dimmer.int.stangl.co.za
           - main-bedroom-plug.int.stangl.co.za
           - main-db-em.int.stangl.co.za
-          - office-plug.int.stangl.co.za
           - office-hvac.int.stangl.co.za
-          - office-pendant-light.int.stangl.co.za
           - office-light-switch.int.stangl.co.za
+          - office-pendant-light.int.stangl.co.za
+          - office-plug.int.stangl.co.za
+          - outside-back-garden.int.stangl.co.za
+          - outside-front-garden.int.stangl.co.za
+          - outside-light-front-switch.int.stangl.co.za
+          - outside-patio-wall.int.stangl.co.za
+          - patio-light-left.int.stangl.co.za
+          - patio-light-right.int.stangl.co.za
+          - dining-room-plus.int.stangl.co.za
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
