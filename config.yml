@@ -139,7 +139,6 @@ prometheus_extra_scrape_configs: >
           - lounge-bulb-front-right.int.stangl.co.za
           - lounge-bulb-rear-left.int.stangl.co.za
           - lounge-bulb-rear-right.int.stangl.co.za
-          - lounge-equipment.int.stangl.co.za
           - lounge-extra-plug.int.stangl.co.za
           - lounge-light-switch.int.stangl.co.za
           - lounge-plug.int.stangl.co.za
@@ -151,6 +150,7 @@ prometheus_extra_scrape_configs: >
           - office-light-switch.int.stangl.co.za
           - office-pendant-light.int.stangl.co.za
           - office-plug.int.stangl.co.za
+          - office-screen.int.stangl.co.za
           - outside-back-garden.int.stangl.co.za
           - outside-front-garden.int.stangl.co.za
           - outside-light-front-switch.int.stangl.co.za
