@@ -146,10 +146,10 @@ prometheus_extra_scrape_configs: >
           - maids-room-plug.int.stangl.co.za
           - main-bedroom-dimmer.int.stangl.co.za
           - main-bedroom-plug.int.stangl.co.za
+          - main-bedroom-psu.int.stangl.co.za
           - main-db-em.int.stangl.co.za
           - office-hvac.int.stangl.co.za
           - office-light-switch.int.stangl.co.za
-          - office-pendant-light.int.stangl.co.za
           - office-plug.int.stangl.co.za
           - office-screen.int.stangl.co.za
           - outside-back-garden.int.stangl.co.za

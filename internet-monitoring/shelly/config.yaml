@@ -45,6 +45,10 @@ devices:
   - IPAddress: "main-bedroom-plug.int.stangl.co.za"
     displayName: "BedroomPlug"
     type: "1pm"
+  - IPAddress: "main-bedroom-psu.int.stangl.co.za"
+    displayName: "BedroomPSU"
+    type: "1pmPlus"
+    generation: 2
   - IPAddress: "office-plug.int.stangl.co.za"
     displayName: "OfficePlug"
     type: "1pmPlus"
