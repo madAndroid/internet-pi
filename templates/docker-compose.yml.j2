@@ -78,6 +78,22 @@ services:
     networks:
       - back-tier
 
+  loki:
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    image: grafana/loki:2.9.4
+    restart: always
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - prometheus
+    ports:
+      - 3100:3100
+    networks:
+      - back-tier
+
   grafana:
     dns:
       - 8.8.8.8
