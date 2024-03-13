@@ -140,8 +140,6 @@ prometheus_extra_scrape_configs: >
           - kitchen-counter-plug.int.stangl.co.za
           - lounge-bulb-front-left.int.stangl.co.za
           - lounge-bulb-front-right.int.stangl.co.za
-          - lounge-bulb-rear-left.int.stangl.co.za
-          #- lounge-bulb-rear-right.int.stangl.co.za
           - lounge-extra-plug.int.stangl.co.za
           - lounge-light-switch.int.stangl.co.za
           - lounge-plug.int.stangl.co.za
