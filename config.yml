@@ -158,7 +158,7 @@ prometheus_extra_scrape_configs: >
           - outside-patio-wall.int.stangl.co.za
           - patio-light-left.int.stangl.co.za
           - patio-light-right.int.stangl.co.za
-          - dining-room-plus.int.stangl.co.za
+          - spare-room-plug.int.stangl.co.za
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
