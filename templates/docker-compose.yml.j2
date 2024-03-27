@@ -1,6 +1,5 @@
 # {{ ansible_managed }}
 ---
-version: "3.5"
 
 volumes:
   prometheus_data: {}
@@ -130,8 +129,6 @@ services:
     dns:
       - 8.8.8.8
       - 8.8.4.4
-    tty: true
-    stdin_open: true
     expose:
       - 9115
     ports:
