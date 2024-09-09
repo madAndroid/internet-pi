@@ -121,7 +121,7 @@ services:
 {% endif %}
 
   ping:
-    image: prom/blackbox-exporter:latest
+    image: prom/blackbox-exporter:v0.25.0
     restart: always
     volumes:
       - /etc/localtime:/etc/localtime:ro
