@@ -61,7 +61,7 @@ airgradient_enable: false
 starlink_enable: false
 
 prometheus_monitor_prometheus: true
-prometheus_tsdb_retention_time: 600d
+prometheus_tsdb_retention_time: 4y
 
 domain_name_enable: false
 
