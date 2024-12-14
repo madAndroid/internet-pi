@@ -1,71 +1,70 @@
----
 port: 9123
 requestTimeout: 8s
 scrapeInterval: 10s
 devices:
-  - IPAddress: "dining-room-plus.int.stangl.co.za"
-    displayName: "DiningRoom"
-    type: "1pmPlus"
+  - IPAddress: dining-room-plus.int.stangl.co.za
+    displayName: DiningRoom
+    type: 1pmPlus
     generation: 2
-  - IPAddress: "dining-power-strip.int.stangl.co.za"
-    displayName: "DiningPowerStrip"
-    type: "1pmPlus"
+  - IPAddress: dining-power-strip.int.stangl.co.za
+    displayName: DiningPowerStrip
+    type: 1pmPlus
     generation: 2
-  - IPAddress: "family-room-plug.int.stangl.co.za"
-    displayName: "FamilyRoomPlug"
-    type: "1pm"
-  - IPAddress: "family-room-lights.int.stangl.co.za"
-    displayName: "FamilyRoomLights"
-    type: "dimmer2"
-  - IPAddress: "fridge-plug.int.stangl.co.za"
-    displayName: "Fridge"
-    type: "1pm"
-  - IPAddress: "gas-geyser.int.stangl.co.za"
-    displayName: "GasGeyser"
-    type: "1pm"
-  - IPAddress: "jax-bedroom-plug.int.stangl.co.za"
-    displayName: "JaxBedroom"
-    type: "1pm"
-  - IPAddress: "jax-desk-psu.int.stangl.co.za"
-    displayName: "JaxDeskPSU"
-    type: "1pm"
-  - IPAddress: "kitchen-appliances.int.stangl.co.za"
-    displayName: "KitchenAppliances"
-    type: "1pm"
-  - IPAddress: "kitchen-counter-plug.int.stangl.co.za"
-    displayName: "KitchenCounter"
-    type: "1pmPlus"
-  - IPAddress: "lounge-plug.int.stangl.co.za"
-    displayName: "LoungePlug"
-    type: "1pmPlus"
+  - IPAddress: family-room-plug.int.stangl.co.za
+    displayName: FamilyRoomPlug
+    type: 1pm
+  - IPAddress: family-room-lights.int.stangl.co.za
+    displayName: FamilyRoomLights
+    type: dimmer2
+  - IPAddress: fridge-plug.int.stangl.co.za
+    displayName: Fridge
+    type: 1pm
+  - IPAddress: gas-geyser.int.stangl.co.za
+    displayName: GasGeyser
+    type: 1pm
+  - IPAddress: jax-bedroom-plug.int.stangl.co.za
+    displayName: JaxBedroom
+    type: 1pm
+  - IPAddress: jax-desk-psu.int.stangl.co.za
+    displayName: JaxDeskPSU
+    type: 1pm
+  - IPAddress: kitchen-appliances.int.stangl.co.za
+    displayName: KitchenAppliances
+    type: 1pm
+  - IPAddress: kitchen-counter-plug.int.stangl.co.za
+    displayName: KitchenCounter
+    type: 1pmPlus
+  - IPAddress: lounge-plug.int.stangl.co.za
+    displayName: LoungePlug
+    type: 1pmPlus
     generation: 2
-  - IPAddress: "lounge-extra-plug.int.stangl.co.za"
-    displayName: "LoungeExtraPlug"
-    type: "1pm"
-  - IPAddress: "maids-room-plug.int.stangl.co.za"
-    displayName: "MaidsRoom"
-    type: "1pm"
-  - IPAddress: "main-bedroom-plug.int.stangl.co.za"
-    displayName: "BedroomPlug"
-    type: "1pm"
-  - IPAddress: "main-bedroom-psu.int.stangl.co.za"
-    displayName: "BedroomPSU"
-    type: "1pmPlus"
+  - IPAddress: lounge-extra-plug.int.stangl.co.za
+    displayName: LoungeExtraPlug
+    type: 1pm
+  - IPAddress: maids-room-plug.int.stangl.co.za
+    displayName: MaidsRoom
+    type: 1pmPlus
+  - IPAddress: main-bedroom-plug.int.stangl.co.za
+    displayName: BedroomPlug
+    type: 1pm
+  - IPAddress: main-bedroom-psu.int.stangl.co.za
+    displayName: BedroomPSU
+    type: 1pmPlus
     generation: 2
-  - IPAddress: "main-db-em.int.stangl.co.za"
-    displayName: "MainDB"
-    type: "em"
-  - IPAddress: "office-plug.int.stangl.co.za"
-    displayName: "OfficePlug"
-    type: "1pmPlus"
+  - IPAddress: main-db-em.int.stangl.co.za
+    displayName: MainDB
+    type: em
+  - IPAddress: office-plug.int.stangl.co.za
+    displayName: OfficePlug
+    type: 1pmPlus
     generation: 2
-  - IPAddress: "office-hvac.int.stangl.co.za"
-    displayName: "OfficeHVAC"
-    type: "1pm"
-  - IPAddress: "office-screen.int.stangl.co.za"
-    displayName: "Office-Screen"
-    type: "1pm"
-  - IPAddress: "spare-room-plug.int.stangl.co.za"
-    displayName: "SpareRoomPlug"
-    type: "1pmPlus"
+  - IPAddress: office-hvac.int.stangl.co.za
+    displayName: OfficeHVAC
+    type: 1pm
+  - IPAddress: office-screen.int.stangl.co.za
+    displayName: Office-Screen
+    type: 1pm
+  - IPAddress: spare-room-plug.int.stangl.co.za
+    displayName: SpareRoomPlug
+    type: 1pmPlus
     generation: 2
