@@ -44,6 +44,7 @@ devices:
   - IPAddress: maids-room-plug.int.stangl.co.za
     displayName: MaidsRoom
     type: 1pmPlus
+    generation: 2
   - IPAddress: main-bedroom-plug.int.stangl.co.za
     displayName: BedroomPlug
     type: 1pm
