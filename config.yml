@@ -15,8 +15,8 @@ monitoring_enable: true
 monitoring_speedtest_interval: 3m
 monitoring_ping_interval: 5s
 monitoring_ping_hosts:  # [URL];[HUMAN_READABLE_NAME]
-  - https://nas.int.stangl.co.za/;NAS-Media
-  - https://nas-storage.int.stangl.co.za/;NAS-Storage
+  - https://nas.int.stangl.co.za;NAS-Media
+  - https://nas-storage.int.stangl.co.za;NAS-Storage
   - https://gateway.stangl.co.za;UDM-Gateway
   - https://hass.int.stangl.co.za;Home-Assistant
   - https://grafana.int.stangl.co.za;Grafana
