@@ -22,7 +22,7 @@ monitoring_ping_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - https://grafana.int.stangl.co.za;Grafana
   - https://pihole.int.stangl.co.za;Pi-Hole
 #  - http://stangl-solar.int.stangl.co.za;Solar-IO-Home
-#  - http://ascendant-solar.int.stangl.co.za;Solar-IO-Office
+  - http://ascendant-solar.int.stangl.co.za;Solar-IO-Office
 
 monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - 192.168.88.245;lab-kvm-01
@@ -44,7 +44,7 @@ monitoring_essential_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - gateway.stangl.co.za;UDM-Gateway
   - hass.int.stangl.co.za;Home-Assistant
 #  - stangl-solar.int.stangl.co.za;Solar-Assist-Home
-#  - ascendant-solar.int.stangl.co.za;Solar-Assist-Office
+  - ascendant-solar.int.stangl.co.za;Solar-Assist-Office
   - zimaboard.int.stangl.co.za;Zimaboard
 
 # Shelly Plug configuration. (Also requires `monitoring_enable`)
@@ -119,7 +119,6 @@ prometheus_extra_scrape_configs: >
       module: [icmp]  # Look for ping response
     static_configs:
       - targets:
-          - dining-power-strip.int.stangl.co.za
           - dining-room-controller.int.stangl.co.za
           - dining-room-light.int.stangl.co.za
           - dining-room-plus.int.stangl.co.za
@@ -148,6 +147,7 @@ prometheus_extra_scrape_configs: >
           - main-bedroom-psu.int.stangl.co.za
           - main-db-em.int.stangl.co.za
           - main-inverter-monitoring.int.stangl.co.za
+          - network-cabinet-psu.int.stangl.co.za
           - office-hvac.int.stangl.co.za
           - office-light-switch.int.stangl.co.za
           - office-plug.int.stangl.co.za
@@ -159,6 +159,7 @@ prometheus_extra_scrape_configs: >
           - patio-light-left.int.stangl.co.za
           - patio-light-right.int.stangl.co.za
           - spare-room-plug.int.stangl.co.za
+          - work-desk-psu.int.stangl.co.za
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
