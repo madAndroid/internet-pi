@@ -8,7 +8,8 @@ devices:
     generation: 2
   - IPAddress: family-room-plug.int.stangl.co.za
     displayName: FamilyRoomPlug
-    type: 1pm
+    type: 1pmPlus
+    generation: 2
   - IPAddress: family-room-lights.int.stangl.co.za
     displayName: FamilyRoomLights
     type: dimmer2

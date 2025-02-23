@@ -21,7 +21,7 @@ monitoring_ping_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - https://hass.int.stangl.co.za;Home-Assistant
   - https://grafana.int.stangl.co.za;Grafana
   - https://pihole.int.stangl.co.za;Pi-Hole
-#  - http://stangl-solar.int.stangl.co.za;Solar-IO-Home
+  - http://stangl-solar.int.stangl.co.za;Solar-IO-Home
   - http://ascendant-solar.int.stangl.co.za;Solar-IO-Office
 
 monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
@@ -129,7 +129,7 @@ prometheus_extra_scrape_configs: >
           - frontgate-strikelock.int.stangl.co.za
           - garage-lights.int.stangl.co.za
           - garage-main-light-switch.int.stangl.co.za
-          # - garage-plugs.int.stangl.co.za
+          - garage-plugs.int.stangl.co.za
           - gas-geyser.int.stangl.co.za
           - jax-bedroom-dimmer.int.stangl.co.za
           - jax-bedroom-plug.int.stangl.co.za
