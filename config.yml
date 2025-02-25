@@ -43,7 +43,7 @@ monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
 monitoring_essential_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - gateway.stangl.co.za;UDM-Gateway
   - hass.int.stangl.co.za;Home-Assistant
-#  - stangl-solar.int.stangl.co.za;Solar-Assist-Home
+  - stangl-solar.int.stangl.co.za;Solar-Assist-Home
   - ascendant-solar.int.stangl.co.za;Solar-Assist-Office
   - zimaboard.int.stangl.co.za;Zimaboard
 
