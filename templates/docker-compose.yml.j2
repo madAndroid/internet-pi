@@ -141,6 +141,9 @@ services:
   speedtest:
     image: miguelndecarvalho/speedtest-exporter:v3.5.4
     restart: always
+    healthcheck:
+      test: "wget --no-verbose --tries=1 --spider http://0.0.0.0:9798/"
+      timeout: 10s
     environment:
       - TZ='Africa/Johannesburg'
     dns:
