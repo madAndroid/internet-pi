@@ -140,7 +140,7 @@ prometheus_extra_scrape_configs: >
           - lounge-bulb-front-right.int.stangl.co.za
           - lounge-extra-plug.int.stangl.co.za
           - lounge-light-switch.int.stangl.co.za
-          - lounge-plug.int.stangl.co.za
+          - lounge-plugs.int.stangl.co.za
           - maids-room-plug.int.stangl.co.za
           - main-bedroom-dimmer.int.stangl.co.za
           - main-bedroom-plug.int.stangl.co.za

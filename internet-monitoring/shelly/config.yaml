@@ -31,9 +31,9 @@ devices:
   - IPAddress: kitchen-counter-plug.int.stangl.co.za
     displayName: KitchenCounter
     type: 1pmPlus
-  - IPAddress: lounge-plug.int.stangl.co.za
+  - IPAddress: lounge-plugs.int.stangl.co.za
     displayName: LoungePlug
-    type: 1pmPlus
+    type: 2pmPlus
     generation: 2
   - IPAddress: lounge-extra-plug.int.stangl.co.za
     displayName: LoungeExtraPlug
