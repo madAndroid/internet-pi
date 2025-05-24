@@ -136,8 +136,6 @@ prometheus_extra_scrape_configs: >
           - jax-desk-psu.int.stangl.co.za
           - kitchen-appliances.int.stangl.co.za
           - kitchen-counter-plug.int.stangl.co.za
-          - lounge-bulb-front-left.int.stangl.co.za
-          - lounge-bulb-front-right.int.stangl.co.za
           - lounge-extra-plug.int.stangl.co.za
           - lounge-light-switch.int.stangl.co.za
           - lounge-plugs.int.stangl.co.za
