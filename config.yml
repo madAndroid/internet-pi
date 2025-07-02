@@ -22,7 +22,7 @@ monitoring_ping_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - https://grafana.int.stangl.co.za;Grafana
   - https://pihole.int.stangl.co.za;Pi-Hole
   - http://stangl-solar.int.stangl.co.za;Solar-IO-Home
-  - http://ascendant-solar.int.stangl.co.za;Solar-IO-Office
+  # - http://ascendant-solar.int.stangl.co.za;Solar-IO-Office
 
 monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - 192.168.88.245;lab-kvm-01
@@ -44,7 +44,7 @@ monitoring_essential_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - gateway.stangl.co.za;UDM-Gateway
   - hass.int.stangl.co.za;Home-Assistant
   - stangl-solar.int.stangl.co.za;Solar-Assist-Home
-  - ascendant-solar.int.stangl.co.za;Solar-Assist-Office
+  # - ascendant-solar.int.stangl.co.za;Solar-Assist-Office
   - zimaboard.int.stangl.co.za;Zimaboard
 
 # Shelly Plug configuration. (Also requires `monitoring_enable`)
