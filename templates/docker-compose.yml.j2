@@ -196,6 +196,18 @@ services:
       - UP_UNIFI_CONTROLLER_0_SAVE_SITES=true
       - UP_UNIFI_CONTROLLER_0_URL=https://192.168.88.1
 
+  gotify:
+    image: gotify/server:2.6.3
+    ports:
+      - 8080:80
+    environment:
+      GOTIFY_DEFAULTUSER_PASS: 'admin'
+    volumes:
+      - './gotify_data:/app/data'
+    # to run gotify as a dedicated user:
+    # sudo chown -R 1234:1234 ./gotify_data
+    # user: "1234:1234"
+
 #  nodeexp:
 #    privileged: true
 #    container_name: pihole.int.stangl.co.za
