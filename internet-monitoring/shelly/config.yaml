@@ -35,6 +35,9 @@ devices:
     displayName: LoungePlug
     type: 2pmPlus
     generation: 2
+    channelNames:
+      0: "Double-Plugs"
+      1: "Extention"
   - IPAddress: lounge-extra-plug.int.stangl.co.za
     displayName: LoungeExtraPlug
     type: 1pm
