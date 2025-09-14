@@ -2,10 +2,13 @@ port: 9123
 requestTimeout: 8s
 scrapeInterval: 10s
 devices:
-  - IPAddress: dining-room-plus.int.stangl.co.za
+  - IPAddress: dining-room-plugs.int.stangl.co.za
     displayName: DiningRoom
-    type: 1pmPlus
+    type: 2pmPlus
     generation: 2
+    channelNames:
+      0: "Double-Plugs"
+      1: "Shelf"
   - IPAddress: family-room-plug.int.stangl.co.za
     displayName: FamilyRoomPlug
     type: 1pmPlus
