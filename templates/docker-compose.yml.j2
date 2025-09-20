@@ -198,6 +198,7 @@ services:
 
   gotify:
     image: gotify/server:2.6.3
+    restart: always
     ports:
       - 8088:80
     environment:
