@@ -2,6 +2,7 @@
 ---
 volumes:
   prometheus_data: {}
+  netalertx_data: {}
 
 networks:
   front-tier:
@@ -172,29 +173,59 @@ services:
     networks:
       - back-tier
 
-  unpoller:
-    image: ghcr.io/unpoller/unpoller:v2.9.2
-    restart: always
-    ports:
-      - '9130:9130'
-    container_name: unpoller
-    networks:
-      - back-tier
+  netalertx:
+    container_name: netalertx                       # The name when you docker contiainer ls
+    image: ghcr.io/jokob-sk/netalertx:latest
+    network_mode: host                              # Use host networking for ARP scanning and other services
+    restart: unless-stopped
+    read_only: true                                 # Make the container filesystem read-only
+    cap_drop:                                       # Drop all capabilities for enhanced security
+      - ALL
+    cap_add:                                        # Add only the necessary capabilities
+      - NET_ADMIN                                   # Required for ARP scanning
+      - NET_RAW                                     # Required for raw socket operations
+      - NET_BIND_SERVICE                            # Required to bind to privileged ports (nbtscan)
+
+    volumes:
+      - type: volume                                # Persistent Docker-managed named volume for config + database
+        source: netalertx_data
+        target: /data                               # `/data/config` and `/data/db` live inside this mount
+        read_only: false
+      - type: bind                                  # Bind mount for timezone consistency
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+
+    # tmpfs mount consolidates writable state for a read-only container and improves performance
+    # uid=20211 and gid=20211 is the netalertx user inside the container
+    # mode=1700 grants rwx------ permissions to the netalertx user only
+    tmpfs:
+      # Comment out to retain logs between container restarts - this has a server performance impact.
+      - "/tmp:uid=20211,gid=20211,mode=1700,rw,noexec,nosuid,nodev,async,noatime,nodiratime"
+
+      # Retain logs - comment out tmpfs /tmp if you want to retain logs between container restarts
+      # Please note if you remove the /tmp mount, you must create and maintain sub-folder mounts.
+      # - /path/on/host/log:/tmp/log
+      # - "/tmp/api:uid=20211,gid=20211,mode=1700,rw,noexec,nosuid,nodev,async,noatime,nodiratime"
+      # - "/tmp/nginx:uid=20211,gid=20211,mode=1700,rw,noexec,nosuid,nodev,async,noatime,nodiratime"
+      # - "/tmp/run:uid=20211,gid=20211,mode=1700,rw,noexec,nosuid,nodev,async,noatime,nodiratime"
+
     environment:
-      - UP_INFLUXDB_DISABLE=true
-      - UP_POLLER_DEBUG=false
-      - UP_UNIFI_DYNAMIC=false
-      - UP_PROMETHEUS_HTTP_LISTEN=0.0.0.0:9130
-      - UP_PROMETHEUS_NAMESPACE=unpoller
-      - UP_UNIFI_CONTROLLER_0_USER=hass
-      - UP_UNIFI_CONTROLLER_0_PASS=Dr01dHAaccPW
-      - UP_UNIFI_CONTROLLER_0_SAVE_ALARMS=true
-      - UP_UNIFI_CONTROLLER_0_SAVE_ANOMALIES=true
-      - UP_UNIFI_CONTROLLER_0_SAVE_DPI=true
-      - UP_UNIFI_CONTROLLER_0_SAVE_EVENTS=true
-      - UP_UNIFI_CONTROLLER_0_SAVE_IDS=true
-      - UP_UNIFI_CONTROLLER_0_SAVE_SITES=true
-      - UP_UNIFI_CONTROLLER_0_URL=https://192.168.88.1
+      - LISTEN_ADDR=0.0.0.0
+      - PORT=20211
+      - GRAPHQL_PORT=20212
+  #    NETALERTX_DEBUG: ${NETALERTX_DEBUG:-0}                 # 0=kill all services and restart if any dies. 1 keeps running dead services.
+
+    # Resource limits to prevent resource exhaustion
+    mem_limit: 2048m            # Maximum memory usage
+    mem_reservation: 1024m      # Soft memory limit
+    cpu_shares: 512             # Relative CPU weight for CPU contention scenarios
+    pids_limit: 512             # Limit the number of processes/threads to prevent fork bombs
+    logging:
+      driver: "json-file"       # Use JSON file logging driver
+      options:
+        max-size: "10m"         # Rotate log files after they reach 10MB
+        max-file: "3"           # Keep a maximum of 3 log files
 
   gotify:
     image: gotify/server:2.6.3
