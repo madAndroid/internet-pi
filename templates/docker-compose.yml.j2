@@ -175,7 +175,7 @@ services:
 
   netalertx:
     container_name: netalertx                       # The name when you docker contiainer ls
-    image: ghcr.io/jokob-sk/netalertx:latest
+    image: ghcr.io/jokob-sk/netalertx:25.11
     network_mode: host                              # Use host networking for ARP scanning and other services
     restart: unless-stopped
     read_only: true                                 # Make the container filesystem read-only
