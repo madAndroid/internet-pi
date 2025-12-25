@@ -18,7 +18,8 @@ devices:
     type: dimmer2
   - IPAddress: fridge-plug.int.stangl.co.za
     displayName: Fridge
-    type: 1pm
+    type: 1pmPlus
+    generation: 2
   - IPAddress: gas-geyser.int.stangl.co.za
     displayName: GasGeyser
     type: 1pm
