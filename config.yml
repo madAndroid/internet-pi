@@ -1,6 +1,6 @@
 ---
 # Location where configuration files will be stored.
-config_dir: '~'
+config_dir: "~"
 
 # Pi-hole configuration.
 pihole_enable: true
@@ -14,7 +14,7 @@ pihole_image_tag: 2025.11.1
 monitoring_enable: true
 monitoring_speedtest_interval: 3m
 monitoring_ping_interval: 5s
-monitoring_ping_hosts:  # [URL];[HUMAN_READABLE_NAME]
+monitoring_ping_hosts: # [URL];[HUMAN_READABLE_NAME]
   - https://nas.int.stangl.co.za;NAS-Media
   - https://nas-storage.int.stangl.co.za;NAS-Storage
   - https://gateway.stangl.co.za;UDM-Gateway
@@ -22,9 +22,9 @@ monitoring_ping_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - https://grafana.int.stangl.co.za;Grafana
   - https://pihole.int.stangl.co.za;Pi-Hole
   - http://stangl-solar.int.stangl.co.za;Solar-IO-Home
-  # - http://ascendant-solar.int.stangl.co.za;Solar-IO-Office
+  - http://ascendant-solar.int.stangl.co.za;Solar-IO-Office
 
-monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
+monitoring_lab_hosts: # [URL];[HUMAN_READABLE_NAME]
   - 192.168.88.245;lab-kvm-01
   - 192.168.88.246;lab-kvm-02
   - 192.168.88.247;lab-kvm-03
@@ -40,11 +40,11 @@ monitoring_lab_hosts:  # [URL];[HUMAN_READABLE_NAME]
   - 192.168.88.134;k8s-node-04
   - 192.168.88.135;k8s-node-05
 
-monitoring_essential_hosts:  # [URL];[HUMAN_READABLE_NAME]
+monitoring_essential_hosts: # [URL];[HUMAN_READABLE_NAME]
   - gateway.stangl.co.za;UDM-Gateway
   - hass.int.stangl.co.za;Home-Assistant
   - stangl-solar.int.stangl.co.za;Solar-Assist-Home
-  # - ascendant-solar.int.stangl.co.za;Solar-Assist-Office
+  - ascendant-solar.int.stangl.co.za;Solar-Assist-Office
   - zimaboard.int.stangl.co.za;Zimaboard
 
 # Shelly Plug configuration. (Also requires `monitoring_enable`)

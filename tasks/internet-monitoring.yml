@@ -45,6 +45,8 @@
       dest: prometheus/essential-hosts.yaml
     - src: prometheus-lab-hosts.yaml.j2
       dest: prometheus/lab-hosts.yaml
+    - src: nginx-files.conf.j2
+      dest: nginx-files.conf
   notify: Restart internet-monitoring
   become: false
 
