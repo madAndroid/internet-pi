@@ -52,6 +52,13 @@ devices:
   - IPAddress: main-bedroom-plug.int.stangl.co.za
     displayName: BedroomPlug
     type: 1pm
+  - IPAddress: main-bedroom-plugs.int.stangl.co.za
+    displayName: MainBedroom
+    type: 2pmgen3
+    generation: 3
+    channelNames:
+      0: "Plugs"
+      1: "Heater"
   - IPAddress: main-bedroom-psu.int.stangl.co.za
     displayName: BedroomPSU
     type: 1pmPlus

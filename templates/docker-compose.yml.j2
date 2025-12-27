@@ -157,7 +157,7 @@ services:
       - back-tier
 
   shelly:
-    image: madandroid/shelly-prometheus-exporter:0.4.25
+    image: madandroid/shelly-prometheus-exporter:0.5.3-678b6db
     restart: always
     volumes:
       - ./shelly/config.yaml:/app/config.yaml
