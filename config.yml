@@ -141,7 +141,7 @@ prometheus_extra_scrape_configs: >
           - lounge-plugs.int.stangl.co.za
           - maids-room-plug.int.stangl.co.za
           - main-bedroom-dimmer.int.stangl.co.za
-          - main-bedroom-plug.int.stangl.co.za
+          - main-bedroom-plugs.int.stangl.co.za
           - main-bedroom-psu.int.stangl.co.za
           - main-db-em.int.stangl.co.za
           - main-inverter-monitoring.int.stangl.co.za
@@ -191,3 +191,29 @@ prometheus_extra_scrape_configs: >
         - 'zimaboard.int.stangl.co.za:9100'
         - 'hass.int.stangl.co.za:9100'
         - 'plex.int.stangl.co.za:9100'
+
+  - job_name: 'lab-kvm-hosts'
+    scrape_interval: 30s
+    scrape_timeout: 15s
+    static_configs:
+      - targets:
+        - 'lab-kvm-01.int.stangl.co.za:9100'
+        - 'lab-kvm-02.int.stangl.co.za:9100'
+        - 'lab-kvm-03.int.stangl.co.za:9100'
+        - 'lab-kvm-04.int.stangl.co.za:9100'
+
+  - job_name: 'lab-kvm-nodes'
+    scrape_interval: 30s
+    scrape_timeout: 15s
+    static_configs:
+      - targets:
+        - 'k8s-node-01.int.stangl.co.za:9100'
+        - 'k8s-node-02.int.stangl.co.za:9100'
+        - 'k8s-node-03.int.stangl.co.za:9100'
+        - 'k8s-node-04.int.stangl.co.za:9100'
+        - 'k8s-node-05.int.stangl.co.za:9100'
+        - 'k8s-master-01.int.stangl.co.za:9100'
+        - 'k8s-master-02.int.stangl.co.za:9100'
+        - 'k8s-master-03.int.stangl.co.za:9100'
+        - 'k8s-master-04.int.stangl.co.za:9100'
+        - 'k8s-master-05.int.stangl.co.za:9100'
