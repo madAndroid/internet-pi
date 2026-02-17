@@ -122,6 +122,7 @@ prometheus_extra_scrape_configs: >
           - dining-room-controller.int.stangl.co.za
           - dining-room-light.int.stangl.co.za
           - dining-room-plugs.int.stangl.co.za
+          - dining-room-side-switch.int.stangl.co.za
           - entrance-hall-lights.int.stangl.co.za
           - family-room-lights.int.stangl.co.za
           - family-room-plug.int.stangl.co.za
@@ -146,7 +147,7 @@ prometheus_extra_scrape_configs: >
           - main-db-em.int.stangl.co.za
           - main-inverter-monitoring.int.stangl.co.za
           - network-cabinet-psu.int.stangl.co.za
-          - office-hvac.int.stangl.co.za
+          - office-hvac-plugs.int.stangl.co.za
           - office-light-switch.int.stangl.co.za
           - office-plug.int.stangl.co.za
           - office-screen.int.stangl.co.za

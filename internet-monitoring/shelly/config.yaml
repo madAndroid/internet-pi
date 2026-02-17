@@ -59,6 +59,13 @@ devices:
     channelNames:
       0: "Plugs"
       1: "Heater"
+  - IPAddress: office-hvac-plugs.int.stangl.co.za
+    displayName: Office-HVAC
+    type: 2pmgen3
+    generation: 3
+    channelNames:
+      0: Aircon
+      1: UnderCarpet-Heater
   - IPAddress: main-bedroom-psu.int.stangl.co.za
     displayName: BedroomPSU
     type: 1pmPlus
