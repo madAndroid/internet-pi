@@ -152,8 +152,6 @@ prometheus_extra_scrape_configs: >
           - office-plug.int.stangl.co.za
           - office-screen.int.stangl.co.za
           - outside-back-garden.int.stangl.co.za
-          - outside-front-garden.int.stangl.co.za
-          - outside-light-front-switch.int.stangl.co.za
           - outside-patio-wall.int.stangl.co.za
           - patio-light-left.int.stangl.co.za
           - patio-light-right.int.stangl.co.za
