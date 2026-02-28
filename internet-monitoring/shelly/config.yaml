@@ -49,9 +49,6 @@ devices:
     displayName: MaidsRoom
     type: 1pmPlus
     generation: 2
-  - IPAddress: main-bedroom-plug.int.stangl.co.za
-    displayName: BedroomPlug
-    type: 1pm
   - IPAddress: main-bedroom-plugs.int.stangl.co.za
     displayName: MainBedroom
     type: 2pmgen3
@@ -73,6 +70,9 @@ devices:
   - IPAddress: main-db-em.int.stangl.co.za
     displayName: MainDB
     type: em
+    channelNames:
+      0: Plugs
+      1: Lights
   - IPAddress: network-cabinet-psu.int.stangl.co.za
     displayName: NetworkCabinetPSU
     type: 1pmPlus
@@ -81,9 +81,6 @@ devices:
     displayName: OfficePlug
     type: 1pmPlus
     generation: 2
-  - IPAddress: office-hvac.int.stangl.co.za
-    displayName: OfficeHVAC
-    type: 1pm
   - IPAddress: office-screen.int.stangl.co.za
     displayName: Office-Screen
     type: 1pm
