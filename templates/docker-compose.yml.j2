@@ -157,12 +157,12 @@ services:
       - back-tier
 
   shelly:
-    image: madandroid/shelly-prometheus-exporter:0.5.8-a73c39b
+    image: madandroid/shelly-prometheus-exporter:0.5.10-8637605
     restart: always
     volumes:
       - ./shelly/config.yaml:/app/config.yaml
-    environment:
-      - DEBUG=true
+    # environment:
+    #  - DEBUG=true
     dns:
       - 8.8.8.8
       - 8.8.4.4
