@@ -182,6 +182,8 @@ services:
       - ./homarr/appdata:/appdata
     environment:
       - SECRET_ENCRYPTION_KEY=ad95c1aeeb5510c378ac2fb14e226c14ed7211a3796eb7d814b077c9d5770e30
+      - NEXTAUTH_URL=https://homarr.int.stangl.co.za
+      - AUTH_URL=https://homarr.int.stangl.co.za
     ports:
       - '7575:7575'
 
