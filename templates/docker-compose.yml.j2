@@ -173,6 +173,18 @@ services:
     networks:
       - back-tier
 
+  homarr:
+    container_name: homarr
+    image: ghcr.io/homarr-labs/homarr:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - ./homarr/appdata:/appdata
+    environment:
+      - SECRET_ENCRYPTION_KEY=ad95c1aeeb5510c378ac2fb14e226c14ed7211a3796eb7d814b077c9d5770e30
+    ports:
+      - '7575:7575'
+
   netalertx:
     container_name: netalertx                       # The name when you docker contiainer ls
     image: ghcr.io/jokob-sk/netalertx:25.11
