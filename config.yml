@@ -2,6 +2,9 @@
 # Location where configuration files will be stored.
 config_dir: "~"
 
+# HAProxy configuration
+task_haproxy_enable: true
+
 # Pi-hole configuration.
 pihole_enable: true
 pihole_hostname: pihole

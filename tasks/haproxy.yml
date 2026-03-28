@@ -1,0 +1,22 @@
+---
+- name: Ensure HAproxy is installed
+  ansible.builtin.apt:
+    name: haproxy
+    state: present
+    update_cache: true
+  when: ansible_facts.os_family == "Debian"
+
+- name: Ensure HAproxy is installed (RedHat)
+  ansible.builtin.yum:
+    name: haproxy
+    state: present
+  when: ansible_facts.os_family == "RedHat"
+
+- name: Deploy custom HAproxy config
+  ansible.builtin.copy:
+    src: ../files/haproxy/haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart haproxy

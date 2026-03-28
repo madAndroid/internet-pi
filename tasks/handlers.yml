@@ -1,4 +1,9 @@
 ---
+- name: restart haproxy
+  ansible.builtin.service:
+    name: haproxy
+    state: restarted
+
 - name: Restart pi-hole
   community.docker.docker_compose_v2:
     project_src: "{{ config_dir }}/pi-hole/"
