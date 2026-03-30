@@ -110,6 +110,13 @@ services:
       - front-tier
     depends_on:
       - prometheus
+    environment:
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_FEATURE_TOGGLES_ENABLE=publicDashboards
+      # - GF_SECURITY_COOKIE_SAMESITE=none
+      # - GF_AUTH_ANONYMOUS_ENABLED=true
+      # - GF_AUTH_ANONYMOUS_ORG_NAME=Anon
+      # - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
 {% if domain_name_enable and domain_name and domain_grafana %}
       - nginx-proxy
     environment:
