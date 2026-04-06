@@ -11,7 +11,23 @@ pihole_hostname: pihole
 pihole_timezone: Africa/Johannesburg
 pihole_password: "JPdk11Kv"
 pihole_web_port: 8080
-pihole_image_tag: 2026.02.0
+pihole_image_tag: 2026.04.0
+
+grafana_image_tag: 9.5.3
+prometheus_image_tag: v2.44.0
+blackbox_exporter_image_tag: v0.28.0
+alertmanager_image_tag: v0.24.0
+shelly_exporter_image_tag: 0.5.10-8637605
+speedtest_exporter_image_tag: v3.5.4
+netalertx_image_tag: 26.4.6
+
+loki_image_tag: 2.9.4
+
+homarr_image_tag: v1.58.1
+gotify_image_tag: 2.6.3
+nginx_image_tag: 1.28.1
+
+
 
 # Internet monitoring configuration.
 monitoring_enable: true

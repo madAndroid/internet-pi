@@ -29,7 +29,7 @@ services:
     dns:
       - 8.8.8.8
       - 8.8.4.4
-    image: prom/prometheus:v2.44.0
+    image: prom/prometheus:{{ prometheus_image_tag }}
     restart: always
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -61,7 +61,7 @@ services:
     dns:
       - 8.8.8.8
       - 8.8.4.4
-    image: prom/alertmanager:v0.24.0
+    image: prom/alertmanager:{{ alertmanager_image_tag }}
     restart: always
     ports:
       - "9093:9093"
@@ -80,7 +80,7 @@ services:
     dns:
       - 8.8.8.8
       - 8.8.4.4
-    image: grafana/loki:2.9.4
+    image: grafana/loki:{{ loki_image_tag }}
     restart: always
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
@@ -96,7 +96,7 @@ services:
     dns:
       - 8.8.8.8
       - 8.8.4.4
-    image: grafana/grafana:9.5.3
+    image: grafana/grafana:{{ grafana_image_tag }}
     restart: always
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -125,7 +125,7 @@ services:
 {% endif %}
 
   ping:
-    image: prom/blackbox-exporter:v0.28.0
+    image: prom/blackbox-exporter:{{ blackbox_exporter_image_tag }}
     restart: always
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -145,7 +145,7 @@ services:
       - back-tier
 
   speedtest:
-    image: miguelndecarvalho/speedtest-exporter:v3.5.4
+    image: miguelndecarvalho/speedtest-exporter:{{ speedtest_exporter_image_tag }}
     restart: always
     healthcheck:
       test: "wget --no-verbose --tries=1 --spider http://0.0.0.0:9798/"
@@ -164,7 +164,7 @@ services:
       - back-tier
 
   shelly:
-    image: madandroid/shelly-prometheus-exporter:0.5.10-8637605
+    image: madandroid/shelly-prometheus-exporter:{{ shelly_exporter_image_tag }}
     restart: always
     volumes:
       - ./shelly/config.yaml:/app/config.yaml
@@ -182,7 +182,7 @@ services:
 
   homarr:
     container_name: homarr
-    image: ghcr.io/homarr-labs/homarr:latest
+    image: ghcr.io/homarr-labs/homarr:{{ homarr_image_tag }}
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
@@ -196,7 +196,7 @@ services:
 
   netalertx:
     container_name: netalertx                       # The name when you docker contiainer ls
-    image: ghcr.io/jokob-sk/netalertx:25.11
+    image: ghcr.io/jokob-sk/netalertx:{{ netalertx_image_tag }}
     network_mode: host                              # Use host networking for ARP scanning and other services
     restart: unless-stopped
     read_only: true                                 # Make the container filesystem read-only
@@ -249,7 +249,7 @@ services:
         max-file: "3"           # Keep a maximum of 3 log files
 
   gotify:
-    image: gotify/server:2.6.3
+    image: gotify/server:{{ gotify_image_tag }}
     restart: always
     ports:
       - 8088:80
@@ -262,7 +262,7 @@ services:
     # user: "1234:1234"
 
   nginx_files:
-    image: nginx:1.28.1
+    image: nginx:{{ nginx_image_tag }}
     restart: always
     ports:
       - 8181:80
