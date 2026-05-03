@@ -3,6 +3,7 @@
 volumes:
   prometheus_data: {}
   netalertx_data: {}
+  homebox_data: {}
 
 networks:
   front-tier:
@@ -252,6 +253,20 @@ services:
       options:
         max-size: "10m"         # Rotate log files after they reach 10MB
         max-file: "3"           # Keep a maximum of 3 log files
+
+  homebox:
+    image: ghcr.io/sysadminsmedia/homebox:latest
+    restart: always
+    environment:
+      - HBOX_LOG_LEVEL=info
+      - HBOX_LOG_FORMAT=text
+      - HBOX_WEB_MAX_UPLOAD_SIZE=10
+      # Please consider allowing analytics to help us improve Homebox (basic computer information, no personal data)
+      - HBOX_OPTIONS_ALLOW_ANALYTICS=false
+    volumes:
+      - homebox_data:/data/
+    ports:
+      - 3110:7745
 
   gotify:
     image: gotify/server:{{ gotify_image_tag }}
