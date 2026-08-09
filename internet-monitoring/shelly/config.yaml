@@ -84,9 +84,10 @@ devices:
     displayName: OfficePlug
     type: 1pmPlus
     generation: 2
-  - IPAddress: office-screen.int.stangl.co.za
-    displayName: Office-Screen
+  - IPAddress: office-lab.int.stangl.co.za
+    displayName: Office-Lab
     type: 1pm
+    generation: 3
   - IPAddress: spare-room-plug.int.stangl.co.za
     displayName: SpareRoomPlug
     type: 1pmPlus
