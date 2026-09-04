@@ -215,20 +215,15 @@ prometheus_extra_scrape_configs: >
         - 'lab-kvm-01.int.stangl.co.za:9100'
         - 'lab-kvm-02.int.stangl.co.za:9100'
         - 'lab-kvm-03.int.stangl.co.za:9100'
-        - 'lab-kvm-04.int.stangl.co.za:9100'
 
   - job_name: 'lab-kvm-nodes'
     scrape_interval: 30s
     scrape_timeout: 15s
     static_configs:
       - targets:
-        - 'k8s-node-01.int.stangl.co.za:9100'
-        - 'k8s-node-02.int.stangl.co.za:9100'
-        - 'k8s-node-03.int.stangl.co.za:9100'
-        - 'k8s-node-04.int.stangl.co.za:9100'
-        - 'k8s-node-05.int.stangl.co.za:9100'
-        - 'k8s-master-01.int.stangl.co.za:9100'
-        - 'k8s-master-02.int.stangl.co.za:9100'
-        - 'k8s-master-03.int.stangl.co.za:9100'
-        - 'k8s-master-04.int.stangl.co.za:9100'
-        - 'k8s-master-05.int.stangl.co.za:9100'
+        - 'talos-wk-01.int.stangl.co.za:9100'
+        - 'talos-wk-02.int.stangl.co.za:9100'
+        - 'talos-wk-03.int.stangl.co.za:9100'
+        - 'talos-cp-01.int.stangl.co.za:9100'
+        - 'talos-cp-02.int.stangl.co.za:9100'
+        - 'talos-cp-03.int.stangl.co.za:9100'
