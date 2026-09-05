@@ -1,0 +1,9 @@
+---
+- name: Synchronize user bin scripts.
+  ansible.posix.synchronize:
+    src: files/bin/
+    dest: "{{ config_dir }}/bin/"
+    recursive: true
+    delete: true
+    perms: true
+  become: false
