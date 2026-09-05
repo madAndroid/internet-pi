@@ -6,21 +6,23 @@ TIMEOUT="300"
 mkdir -p ~/log
 [ -f ${LOG} ] || touch ${LOG}
 
-echo "$(date)" >> ${LOG}
-exec >> ${LOG}
-exec 2>&1
+# Tee'd rather than plain-redirected so the script is still useful run
+# interactively (console output) as well as from cron (log file only).
+exec > >(tee -a "${LOG}") 2>&1
+
+echo "$(date)"
 
 echo -e "\nStartup starting at: $(date)\n"
 
-### First drain all nodes, then all masters:
-for srv in k8s-node-0{1,2,3,4,5}; do
-	echo "Uncordoning node: $srv.int.stangl.co.za"
-	timeout $TIMEOUT kubectl uncordon $srv.int.stangl.co.za
+### First uncordon all workers, then all control planes:
+for srv in talos-wk-0{1,2,3}; do
+	echo "Uncordoning worker: $srv"
+	timeout $TIMEOUT kubectl uncordon $srv
 done
 
-for srv in k8s-master-0{1,2,3,4,5}; do
-	echo "Uncordoning master: $srv.int.stangl.co.za"
-	timeout $TIMEOUT kubectl uncordon $srv.int.stangl.co.za
+for srv in talos-cp-0{1,2,3}; do
+	echo "Uncordoning control plane: $srv"
+	timeout $TIMEOUT kubectl uncordon $srv
 done
 
 echo -e "\nStartup complete at: $(date)"

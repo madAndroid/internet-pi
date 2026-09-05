@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-#
-set -x
 
 LOG="${HOME}/log/shutdown.log"
 TIMEOUT="120"
@@ -8,15 +6,22 @@ TIMEOUT="120"
 mkdir -p ~/log
 [ -f ${LOG} ] || touch ${LOG}
 
-echo "$(date)" >> ${LOG}
-exec >> ${LOG}
-exec 2>&1
+# Tee'd rather than plain-redirected so the script is still useful run
+# interactively (console output) as well as from cron (log file only).
+exec > >(tee -a "${LOG}") 2>&1
+
+echo "$(date)"
 
 # talosctl is mise-managed. mise's shell hook (`mise activate`) only runs in
 # an interactive login shell via .zshrc/.bashrc, which a non-interactive
 # invocation of this script (cron, ssh non-login session) never sources -
 # so its shims dir is added to PATH directly here instead.
 export PATH="${HOME}/.local/share/mise/shims:${PATH}"
+
+# Pinned explicitly (matches terraform/.mise.toml's talos = "1.13.0") so the
+# shim resolves even without a global default configured via
+# `mise use -g talosctl@1.13.0` on the host running this script.
+export MISE_TALOSCTL_VERSION="1.13.0"
 
 if ! which talosctl >/dev/null 2>&1; then
 	echo "talosctl not found in PATH - install it via mise before running this script"
@@ -69,7 +74,7 @@ echo "Shutting down Talos worker nodes:"
 for srv in "${!TALOS_WK_IPS[@]}"; do echo $srv; talosctl shutdown -n "${TALOS_WK_IPS[$srv]}"; sleep 3; done
 
 echo "Shutting down KVM hypervisors:"
-for srv in lab-kvm-0{1,2,3,4}; do echo $srv; ssh $SSH_OPTIONS $srv "sudo shutdown -h now"; sleep 3; done
+for srv in lab-kvm-0{1,2,3}; do echo $srv; ssh $SSH_OPTIONS $srv "sudo shutdown -h now"; sleep 3; done
 
 echo "Shutting down Network attached storage machines:"
 for nas in nas-storage; do echo $nas; ssh $SSH_OPTIONS admin@$nas "sudo poweroff"; sleep 3; done
