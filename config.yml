@@ -40,20 +40,15 @@ monitoring_ping_hosts: # [URL];[HUMAN_READABLE_NAME]
   - http://ascendant-solar.int.stangl.co.za;Solar-IO-Office
 
 monitoring_lab_hosts: # [URL];[HUMAN_READABLE_NAME]
-  - 192.168.88.245;lab-kvm-01
-  - 192.168.88.246;lab-kvm-02
-  - 192.168.88.247;lab-kvm-03
-  - 192.168.88.248;lab-kvm-04
-  - 192.168.88.121;k8s-master-01
-  - 192.168.88.122;k8s-master-02
-  - 192.168.88.123;k8s-master-03
-  - 192.168.88.124;k8s-master-04
-  - 192.168.88.125;k8s-master-05
-  - 192.168.88.131;k8s-node-01
-  - 192.168.88.132;k8s-node-02
-  - 192.168.88.133;k8s-node-03
-  - 192.168.88.134;k8s-node-04
-  - 192.168.88.135;k8s-node-05
+  - 192.168.88.246;lab-kvm-01
+  - 192.168.88.247;lab-kvm-02
+  - 192.168.88.248;lab-kvm-03
+  - 192.168.88.121;talos-cp-01
+  - 192.168.88.122;talos-cp-02
+  - 192.168.88.123;talos-cp-03
+  - 192.168.88.131;talos-wk-01
+  - 192.168.88.132;talos-wk-02
+  - 192.168.88.133;talos-wk-03
 
 monitoring_essential_hosts: # [URL];[HUMAN_READABLE_NAME]
   - gateway.stangl.co.za;UDM-Gateway

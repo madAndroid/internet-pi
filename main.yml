@@ -30,6 +30,9 @@
     - name: Setup Docker.
       ansible.builtin.import_tasks: tasks/docker.yml
 
+    - name: Sync user bin scripts.
+      ansible.builtin.import_tasks: tasks/user-bin.yml
+
     - name: Set up HAproxy.
       ansible.builtin.import_tasks: tasks/haproxy.yml
       when: task_haproxy_enable | default(false)
