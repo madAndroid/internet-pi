@@ -28,7 +28,11 @@ if ! which talosctl >/dev/null 2>&1; then
 	exit 1
 fi
 
-SSH_OPTIONS="-o ConnectTimeout=3 -o StrictHostKeyChecking=no"
+### UserKnownHostsFile=/dev/null tolerates rebuilt/renamed lab hosts with a
+### stale known_hosts entry (StrictHostKeyChecking=no alone still rejects a
+### *changed* key). LogLevel=ERROR suppresses the resulting "Warning:
+### Permanently added..." noise.
+SSH_OPTIONS="-o ConnectTimeout=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR"
 
 echo -e "\nShutdown starting at: $(date)\n"
 
@@ -58,18 +62,13 @@ for srv in "${!TALOS_CP_IPS[@]}"; do
 	kubectl cordon $srv
 done
 
-### Flux reconciliation must be stopped before anything below is scaled
-### down, or it'll just restore the declared replica counts out from under
-### us mid-drain.
+### Stop Flux first, or it'll restore replica counts out from under us mid-drain.
 echo "Scaling down Flux controllers in flux-system:"
 kubectl scale deployment --all -n flux-system --replicas=0
 
-### Longhorn ships a PodDisruptionBudget per volume so it can orchestrate
-### replica rebuilds itself rather than have a pod evicted out from under
-### it - which blocks `kubectl drain` indefinitely for any Longhorn-backed
-### Deployment/StatefulSet. Scale those down first (and wait for their pods
-### to actually terminate, not just for the scale command to be accepted)
-### so the PDB has nothing left to protect by the time drain runs.
+### Longhorn's per-volume PDB blocks `kubectl drain` while a pod is still
+### running - scale Longhorn-backed workloads to 0 and wait for pods to
+### actually terminate first, so drain has nothing left to evict.
 scale_down_and_wait() {
 	local kind="$1" ns="$2" name="$3"
 	echo "Scaling down ${kind}/${name} in ${ns} (Longhorn-backed)"
