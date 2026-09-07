@@ -58,6 +58,60 @@ for srv in "${!TALOS_CP_IPS[@]}"; do
 	kubectl cordon $srv
 done
 
+### Flux reconciliation must be stopped before anything below is scaled
+### down, or it'll just restore the declared replica counts out from under
+### us mid-drain.
+echo "Scaling down Flux controllers in flux-system:"
+kubectl scale deployment --all -n flux-system --replicas=0
+
+### Longhorn ships a PodDisruptionBudget per volume so it can orchestrate
+### replica rebuilds itself rather than have a pod evicted out from under
+### it - which blocks `kubectl drain` indefinitely for any Longhorn-backed
+### Deployment/StatefulSet. Scale those down first (and wait for their pods
+### to actually terminate, not just for the scale command to be accepted)
+### so the PDB has nothing left to protect by the time drain runs.
+scale_down_and_wait() {
+	local kind="$1" ns="$2" name="$3"
+	echo "Scaling down ${kind}/${name} in ${ns} (Longhorn-backed)"
+	kubectl scale "$kind" "$name" -n "$ns" --replicas=0
+
+	local selector
+	selector=$(kubectl get "$kind" "$name" -n "$ns" -o json |
+		jq -r '.spec.selector.matchLabels | to_entries | map("\(.key)=\(.value)") | join(",")')
+	if [ -n "$selector" ]; then
+		kubectl wait --for=delete pod -n "$ns" -l "$selector" --timeout=${TIMEOUT}s ||
+			echo "Warning: pods for ${kind}/${name} in ${ns} did not terminate within ${TIMEOUT}s"
+	fi
+}
+
+echo "Identifying Longhorn storage classes:"
+LONGHORN_SCS=$(kubectl get storageclass -o json |
+	jq -c '[.items[] | select(.provisioner=="driver.longhorn.io") | .metadata.name]')
+
+echo "Scaling down StatefulSets using Longhorn storage:"
+kubectl get statefulset -A -o json | jq -r --argjson scs "$LONGHORN_SCS" '
+	.items[]
+	| select(any(.spec.volumeClaimTemplates[]?.spec.storageClassName; . as $sc | $scs | index($sc)))
+	| "\(.metadata.namespace) \(.metadata.name)"
+' | while read -r ns name; do
+	[ -n "$name" ] && scale_down_and_wait statefulset "$ns" "$name"
+done
+
+echo "Identifying PVCs backed by Longhorn storage:"
+LONGHORN_PVCS=$(kubectl get pvc -A -o json | jq -c --argjson scs "$LONGHORN_SCS" '
+	[.items[] | select(.spec.storageClassName as $sc | $scs | index($sc)) | "\(.metadata.namespace)/\(.metadata.name)"]
+')
+
+echo "Scaling down Deployments using Longhorn storage:"
+kubectl get deployment -A -o json | jq -r --argjson pvcs "$LONGHORN_PVCS" '
+	.items[] as $dep
+	| $dep.metadata.namespace as $ns
+	| select(any($dep.spec.template.spec.volumes[]?.persistentVolumeClaim.claimName; . as $c | $pvcs | index("\($ns)/\($c)")))
+	| "\($ns) \($dep.metadata.name)"
+' | while read -r ns name; do
+	[ -n "$name" ] && scale_down_and_wait deployment "$ns" "$name"
+done
+
 for srv in "${!TALOS_WK_IPS[@]}"; do
 	echo "Draining worker: $srv"
 	kubectl drain $srv --timeout=${TIMEOUT}s --ignore-daemonsets --delete-emptydir-data

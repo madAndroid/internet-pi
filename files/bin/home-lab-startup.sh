@@ -25,4 +25,20 @@ for srv in talos-cp-0{1,2,3}; do
 	timeout $TIMEOUT kubectl uncordon $srv
 done
 
+### Bring Flux back only after nodes are schedulable again, so its
+### controllers (and anything it reconciles) land on already-uncordoned
+### nodes. Flux itself then restores every Longhorn-backed Deployment/
+### StatefulSet the shutdown script scaled to zero, by re-applying its
+### declared replica counts - no manual scale-up needed here.
+echo "Scaling Flux controllers back up in flux-system:"
+kubectl scale deployment --all -n flux-system --replicas=1
+
+### The Kustomization's default 10m interval would otherwise leave
+### everything Flux manages sitting at 0 replicas for up to that long -
+### force an immediate reconcile instead.
+echo "Forcing an immediate Flux reconciliation:"
+NOW="$(date -u +%FT%TZ)"
+kubectl annotate gitrepository flux-system -n flux-system --overwrite reconcile.fluxcd.io/requestedAt="$NOW"
+kubectl annotate kustomization flux-system -n flux-system --overwrite reconcile.fluxcd.io/requestedAt="$NOW"
+
 echo -e "\nStartup complete at: $(date)"
