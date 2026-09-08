@@ -169,4 +169,11 @@ NOW="$(date -u +%FT%TZ)"
 kubectl annotate gitrepository flux-system -n flux-system --overwrite reconcile.fluxcd.io/requestedAt="$NOW"
 kubectl annotate kustomization flux-system -n flux-system --overwrite reconcile.fluxcd.io/requestedAt="$NOW"
 
+### Flux's Kustomization doesn't restore these on reconcile (its patches
+### exclude .spec.replicas for them) - scale back up explicitly.
+echo "Scaling smarthome deployments back up:"
+for name in prowlarr radarr sonarr transmission; do
+	kubectl scale deployment "$name" -n smarthome --replicas=1
+done
+
 echo -e "\nStartup complete at: $(date)"
