@@ -111,6 +111,11 @@ kubectl get deployment -A -o json | jq -r --argjson pvcs "$LONGHORN_PVCS" '
 	[ -n "$name" ] && scale_down_and_wait deployment "$ns" "$name"
 done
 
+### Longhorn's instance-manager PDB otherwise blocks draining the node that
+### holds a volume's last replica. Restored by home-lab-startup.sh.
+echo "Relaxing Longhorn's node-drain-policy for the full-cluster shutdown:"
+kubectl -n longhorn-system patch settings.longhorn.io node-drain-policy --type=merge -p '{"value":"always-allow"}'
+
 for srv in "${!TALOS_WK_IPS[@]}"; do
 	echo "Draining worker: $srv"
 	kubectl drain $srv --timeout=${TIMEOUT}s --ignore-daemonsets --delete-emptydir-data
