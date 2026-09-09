@@ -113,14 +113,20 @@ kubectl get deployment -A -o json | jq -r --argjson pvcs "$LONGHORN_PVCS" '
 	[ -n "$name" ] && scale_down_and_wait deployment "$ns" "$name"
 done
 
+### talosctl shutdown watches for a "shutdown confirmed" event, but once the
+### node actually powers off its apid connection just drops - the client
+### doesn't reliably see that event before the connection dies, and instead
+### loops "unavailable, retrying..." forever. timeout keeps that from
+### hanging the whole batch; the shutdown itself has already been issued by
+### the time it fires.
 echo "Shutting down Talos nodes:"
 for srv in "${!TALOS_CP_IPS[@]}"; do
 	echo "$srv"
-	talosctl shutdown -n "${TALOS_CP_IPS[$srv]}" &
+	timeout "${TIMEOUT}" talosctl shutdown -n "${TALOS_CP_IPS[$srv]}" &
 done
 for srv in "${!TALOS_WK_IPS[@]}"; do
 	echo "$srv"
-	talosctl shutdown -n "${TALOS_WK_IPS[$srv]}" &
+	timeout "${TIMEOUT}" talosctl shutdown -n "${TALOS_WK_IPS[$srv]}" &
 done
 wait
 
@@ -134,23 +140,23 @@ sleep 10
 echo "Shutting down KVM hypervisors:"
 for srv in lab-kvm-0{1,2,3}; do
 	echo "$srv"
-	ssh $SSH_OPTIONS $srv "sudo shutdown -h now" &
+	timeout "${TIMEOUT}" ssh $SSH_OPTIONS $srv "sudo shutdown -h now" &
 done
 wait
 
 echo "Shutting down Network attached storage machines:"
 for nas in nas-storage; do
 	echo "$nas"
-	ssh $SSH_OPTIONS admin@$nas "sudo poweroff" &
+	timeout "${TIMEOUT}" ssh $SSH_OPTIONS admin@$nas "sudo poweroff" &
 done
 wait
 #echo "STORAGE NAS SHUTDOWN DISABLED"
 
 if [ "$1" == "ALL" ]; then
     echo "Shutting down linux desktop machine:"
-    ssh $SSH_OPTIONS desktop "sudo shutdown -h now" &
+    timeout "${TIMEOUT}" ssh $SSH_OPTIONS desktop "sudo shutdown -h now" &
     ## Mac mini will shut off with Lounge Plug
-    ssh $SSH_OPTIONS macmini "sudo shutdown -h now" &
+    timeout "${TIMEOUT}" ssh $SSH_OPTIONS macmini "sudo shutdown -h now" &
     wait
     #echo "Shutting down media NAS machine:"
     #for nas in nas-media; do echo $nas; ssh $SSH_OPTIONS admin@$nas "sudo poweroff"; sleep 3; done
