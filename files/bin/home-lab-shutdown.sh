@@ -191,14 +191,20 @@ if [ "$DO_K8S" = true ]; then
 		fi
 	}
 
+	# wait with no arguments waits for every child, including the `tee` from
+	# the exec redirect at the top - which never exits before this script
+	# does, deadlocking it. Wait on these PIDs specifically instead.
 	echo "Shutting down Talos nodes:"
+	pids=()
 	for srv in "${!TALOS_CP_IPS[@]}"; do
 		shutdown_talos_node "$srv" "${TALOS_CP_IPS[$srv]}" &
+		pids+=($!)
 	done
 	for srv in "${!TALOS_WK_IPS[@]}"; do
 		shutdown_talos_node "$srv" "${TALOS_WK_IPS[$srv]}" &
+		pids+=($!)
 	done
-	wait
+	wait "${pids[@]}"
 
 	# talosctl shutdown returning only means the request was accepted, not that
 	# the guest has actually finished halting - a KVM host powering off before
@@ -212,29 +218,36 @@ if [ "$DO_K8S" = true ]; then
 	rm -f "$SHUTDOWN_ISSUED_FLAG"
 
 	echo "Shutting down KVM hypervisors:"
+	pids=()
 	for srv in lab-kvm-0{1,2,3}; do
 		echo "$srv"
 		timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS $srv "sudo shutdown -h now" &
+		pids+=($!)
 	done
-	wait
+	wait "${pids[@]}"
 fi
 
 if [ "$DO_NAS" = true ]; then
 	echo "Shutting down Network attached storage machines:"
+	pids=()
 	for nas in nas-storage; do
 		echo "$nas"
 		timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS admin@$nas "sudo poweroff" &
+		pids+=($!)
 	done
-	wait
+	wait "${pids[@]}"
 	#echo "STORAGE NAS SHUTDOWN DISABLED"
 fi
 
 if [ "$DO_EXTRA" = true ]; then
     echo "Shutting down linux desktop machine:"
+    pids=()
     timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS desktop "sudo shutdown -h now" &
+    pids+=($!)
     ## Mac mini will shut off with Lounge Plug
     timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS macmini "sudo shutdown -h now" &
-    wait
+    pids+=($!)
+    wait "${pids[@]}"
     #echo "Shutting down media NAS machine:"
     #for nas in nas-media; do echo $nas; ssh $SSH_OPTIONS admin@$nas "sudo poweroff"; sleep 3; done
 fi
