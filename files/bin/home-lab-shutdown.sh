@@ -12,6 +12,18 @@ exec > >(tee -a "${LOG}") 2>&1
 
 echo "$(date)"
 
+# Logs why/when the script actually exits, since only its final exit status
+# otherwise shows up outside this log.
+trap 'echo "EXIT trap: status $? at: ${BASH_COMMAND}"' EXIT
+
+# Refuse to start a second run on top of one still in progress (e.g. a
+# retriggered Home Assistant action) rather than piling up instances.
+exec 200>"${HOME}/log/shutdown.lock"
+if ! flock -n 200; then
+	echo "Another instance is already running - exiting"
+	exit 1
+fi
+
 ### k8s: cordon/scale down the cluster, shut down the Talos nodes, then the
 ### KVM hypervisors that run them. nas: power off the NAS. ALL: everything,
 ### including the desktop/Mac mini.
@@ -161,14 +173,19 @@ if [ "$DO_K8S" = true ]; then
 	### against one, and can misreport others as unreachable too via its
 	### endpoint routing. Probe apid's port directly instead.
 	talos_node_up() {
-		timeout 2 bash -c "echo >/dev/tcp/$1/50000" 2>/dev/null
+		timeout -k 1 2 bash -c "echo >/dev/tcp/$1/50000" 2>/dev/null
 	}
+
+	# Marks whether any node actually got a shutdown request, so we know
+	# below whether there's anything worth waiting on.
+	SHUTDOWN_ISSUED_FLAG=$(mktemp)
 
 	shutdown_talos_node() {
 		local srv="$1" ip="$2"
 		if talos_node_up "$ip"; then
 			echo "$srv"
-			timeout "${TIMEOUT}" talosctl shutdown -n "$ip"
+			echo 1 >>"$SHUTDOWN_ISSUED_FLAG"
+			timeout -k 3 "${TIMEOUT}" talosctl shutdown -n "$ip"
 		else
 			echo "$srv ($ip) already unreachable - skipping"
 		fi
@@ -187,13 +204,17 @@ if [ "$DO_K8S" = true ]; then
 	# the guest has actually finished halting - a KVM host powering off before
 	# that happens is equivalent to yanking power from its VMs. Give Talos a
 	# moment to actually stop containerd/etcd and unmount before we cut power to
-	# the hypervisors running them.
-	sleep 10
+	# the hypervisors running them. Skip it if nothing was actually told to
+	# shut down.
+	if [ -s "$SHUTDOWN_ISSUED_FLAG" ]; then
+		sleep 10
+	fi
+	rm -f "$SHUTDOWN_ISSUED_FLAG"
 
 	echo "Shutting down KVM hypervisors:"
 	for srv in lab-kvm-0{1,2,3}; do
 		echo "$srv"
-		timeout "${TIMEOUT}" ssh $SSH_OPTIONS $srv "sudo shutdown -h now" &
+		timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS $srv "sudo shutdown -h now" &
 	done
 	wait
 fi
@@ -202,7 +223,7 @@ if [ "$DO_NAS" = true ]; then
 	echo "Shutting down Network attached storage machines:"
 	for nas in nas-storage; do
 		echo "$nas"
-		timeout "${TIMEOUT}" ssh $SSH_OPTIONS admin@$nas "sudo poweroff" &
+		timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS admin@$nas "sudo poweroff" &
 	done
 	wait
 	#echo "STORAGE NAS SHUTDOWN DISABLED"
@@ -210,9 +231,9 @@ fi
 
 if [ "$DO_EXTRA" = true ]; then
     echo "Shutting down linux desktop machine:"
-    timeout "${TIMEOUT}" ssh $SSH_OPTIONS desktop "sudo shutdown -h now" &
+    timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS desktop "sudo shutdown -h now" &
     ## Mac mini will shut off with Lounge Plug
-    timeout "${TIMEOUT}" ssh $SSH_OPTIONS macmini "sudo shutdown -h now" &
+    timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS macmini "sudo shutdown -h now" &
     wait
     #echo "Shutting down media NAS machine:"
     #for nas in nas-media; do echo $nas; ssh $SSH_OPTIONS admin@$nas "sudo poweroff"; sleep 3; done
