@@ -157,20 +157,29 @@ if [ "$DO_K8S" = true ]; then
 		done
 	fi
 
-	### talosctl shutdown watches for a "shutdown confirmed" event, but once the
-	### node actually powers off its apid connection just drops - the client
-	### doesn't reliably see that event before the connection dies, and instead
-	### loops "unavailable, retrying..." forever. timeout keeps that from
-	### hanging the whole batch; the shutdown itself has already been issued by
-	### the time it fires.
+	### Skip nodes that are already down - talosctl shutdown loops forever
+	### against one, and can misreport others as unreachable too via its
+	### endpoint routing. Probe apid's port directly instead.
+	talos_node_up() {
+		timeout 2 bash -c "echo >/dev/tcp/$1/50000" 2>/dev/null
+	}
+
+	shutdown_talos_node() {
+		local srv="$1" ip="$2"
+		if talos_node_up "$ip"; then
+			echo "$srv"
+			timeout "${TIMEOUT}" talosctl shutdown -n "$ip"
+		else
+			echo "$srv ($ip) already unreachable - skipping"
+		fi
+	}
+
 	echo "Shutting down Talos nodes:"
 	for srv in "${!TALOS_CP_IPS[@]}"; do
-		echo "$srv"
-		timeout "${TIMEOUT}" talosctl shutdown -n "${TALOS_CP_IPS[$srv]}" &
+		shutdown_talos_node "$srv" "${TALOS_CP_IPS[$srv]}" &
 	done
 	for srv in "${!TALOS_WK_IPS[@]}"; do
-		echo "$srv"
-		timeout "${TIMEOUT}" talosctl shutdown -n "${TALOS_WK_IPS[$srv]}" &
+		shutdown_talos_node "$srv" "${TALOS_WK_IPS[$srv]}" &
 	done
 	wait
 
