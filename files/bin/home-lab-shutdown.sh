@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 LOG="${HOME}/log/shutdown.log"
-TIMEOUT="120"
+TIMEOUT="10"
 
 mkdir -p ~/log
 [ -f ${LOG} ] || touch ${LOG}
@@ -51,7 +51,7 @@ declare -A TALOS_WK_IPS=(
 	[talos-wk-03]="192.168.88.133"
 )
 
-### First drain all workers, then all control planes:
+### Cordon all workers, then all control planes:
 for srv in "${!TALOS_WK_IPS[@]}"; do
 	echo "Cordoning worker: $srv"
 	kubectl cordon $srv
@@ -66,9 +66,11 @@ done
 echo "Scaling down Flux controllers in flux-system:"
 kubectl scale deployment --all -n flux-system --replicas=0
 
-### Longhorn's per-volume PDB blocks `kubectl drain` while a pod is still
-### running - scale Longhorn-backed workloads to 0 and wait for pods to
-### actually terminate first, so drain has nothing left to evict.
+### No `kubectl drain` here - every node is going down together, so there's
+### no PDB/service-availability concern to respect. The one thing that still
+### matters is giving Longhorn-backed workloads a clean release of their
+### volumes before power-off, so scale them to 0 and wait for the pods to
+### actually terminate.
 scale_down_and_wait() {
 	local kind="$1" ns="$2" name="$3"
 	echo "Scaling down ${kind}/${name} in ${ns} (Longhorn-backed)"
@@ -111,38 +113,45 @@ kubectl get deployment -A -o json | jq -r --argjson pvcs "$LONGHORN_PVCS" '
 	[ -n "$name" ] && scale_down_and_wait deployment "$ns" "$name"
 done
 
-### Longhorn's instance-manager PDB otherwise blocks draining the node that
-### holds a volume's last replica. Restored by home-lab-startup.sh.
-echo "Relaxing Longhorn's node-drain-policy for the full-cluster shutdown:"
-kubectl -n longhorn-system patch settings.longhorn.io node-drain-policy --type=merge -p '{"value":"always-allow"}'
-
-for srv in "${!TALOS_WK_IPS[@]}"; do
-	echo "Draining worker: $srv"
-	kubectl drain $srv --timeout=${TIMEOUT}s --ignore-daemonsets --delete-emptydir-data
-done
-
+echo "Shutting down Talos nodes:"
 for srv in "${!TALOS_CP_IPS[@]}"; do
-	echo "Draining control plane: $srv"
-	kubectl drain $srv --timeout=${TIMEOUT}s --ignore-daemonsets --delete-emptydir-data
+	echo "$srv"
+	talosctl shutdown -n "${TALOS_CP_IPS[$srv]}" &
 done
+for srv in "${!TALOS_WK_IPS[@]}"; do
+	echo "$srv"
+	talosctl shutdown -n "${TALOS_WK_IPS[$srv]}" &
+done
+wait
 
-echo "Shutting down Talos control plane nodes:"
-for srv in "${!TALOS_CP_IPS[@]}"; do echo $srv; talosctl shutdown -n "${TALOS_CP_IPS[$srv]}"; sleep 3; done
-echo "Shutting down Talos worker nodes:"
-for srv in "${!TALOS_WK_IPS[@]}"; do echo $srv; talosctl shutdown -n "${TALOS_WK_IPS[$srv]}"; sleep 3; done
+# talosctl shutdown returning only means the request was accepted, not that
+# the guest has actually finished halting - a KVM host powering off before
+# that happens is equivalent to yanking power from its VMs. Give Talos a
+# moment to actually stop containerd/etcd and unmount before we cut power to
+# the hypervisors running them.
+sleep 10
 
 echo "Shutting down KVM hypervisors:"
-for srv in lab-kvm-0{1,2,3}; do echo $srv; ssh $SSH_OPTIONS $srv "sudo shutdown -h now"; sleep 3; done
+for srv in lab-kvm-0{1,2,3}; do
+	echo "$srv"
+	ssh $SSH_OPTIONS $srv "sudo shutdown -h now" &
+done
+wait
 
 echo "Shutting down Network attached storage machines:"
-for nas in nas-storage; do echo $nas; ssh $SSH_OPTIONS admin@$nas "sudo poweroff"; sleep 3; done
+for nas in nas-storage; do
+	echo "$nas"
+	ssh $SSH_OPTIONS admin@$nas "sudo poweroff" &
+done
+wait
 #echo "STORAGE NAS SHUTDOWN DISABLED"
 
 if [ "$1" == "ALL" ]; then
     echo "Shutting down linux desktop machine:"
-    for srv in desktop; do echo $srv; ssh $SSH_OPTIONS $srv "sudo shutdown -h now"; sleep 3; done
+    ssh $SSH_OPTIONS desktop "sudo shutdown -h now" &
     ## Mac mini will shut off with Lounge Plug
-    for srv in macmini; do echo $srv; ssh $SSH_OPTIONS $srv "sudo shutdown -h now"; sleep 3; done
+    ssh $SSH_OPTIONS macmini "sudo shutdown -h now" &
+    wait
     #echo "Shutting down media NAS machine:"
     #for nas in nas-media; do echo $nas; ssh $SSH_OPTIONS admin@$nas "sudo poweroff"; sleep 3; done
 fi

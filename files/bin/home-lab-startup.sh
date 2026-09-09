@@ -154,10 +154,6 @@ for srv in talos-cp-0{1,2,3}; do
 	timeout $TIMEOUT kubectl uncordon $srv
 done
 
-### Restore the last-replica protection home-lab-shutdown.sh relaxed.
-echo "Restoring Longhorn's node-drain-policy:"
-kubectl -n longhorn-system patch settings.longhorn.io node-drain-policy --type=merge -p '{"value":"block-if-contains-last-replica"}'
-
 ### Flux restores every Longhorn-backed workload the shutdown script scaled
 ### to zero, by re-applying its declared replica counts.
 echo "Scaling Flux controllers back up in flux-system:"
