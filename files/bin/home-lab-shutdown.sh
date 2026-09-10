@@ -12,9 +12,9 @@ exec > >(tee -a "${LOG}") 2>&1
 
 echo "$(date)"
 
-# Logs why/when the script actually exits, since only its final exit status
-# otherwise shows up outside this log.
-trap 'echo "EXIT trap: status $? at: ${BASH_COMMAND}"' EXIT
+# Logs why/when the script exits abnormally, since only its final exit
+# status otherwise shows up outside this log.
+trap 'status=$?; [ "$status" -eq 0 ] || echo "EXIT trap: status $status at: ${BASH_COMMAND}"' EXIT
 
 # Refuse to start a second run on top of one still in progress (e.g. a
 # retriggered Home Assistant action) rather than piling up instances.
