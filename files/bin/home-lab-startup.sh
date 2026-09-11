@@ -65,12 +65,13 @@ POLL_TIMEOUT=300
 ### confirm via virsh and start if needed, before trusting talosctl/kubectl.
 ensure_kvm_vm_running() {
 	local kvm_host="$1" vm="$2"
-	local elapsed=0 output state
+	local elapsed=0 output state rc
 
 	while true; do
 		# --connect qemu:///system: a bare `virsh` over a non-interactive ssh
 		# command falls back to qemu:///session (no domains there).
 		output=$(ssh $SSH_OPTIONS "$kvm_host" "virsh --connect qemu:///system domstate '$vm'" 2>&1)
+		rc=$?
 		state=$(echo "$output" | tr -d '[:space:]')
 
 		if [ "$state" == "running" ]; then
@@ -79,15 +80,24 @@ ensure_kvm_vm_running() {
 		fi
 
 		if [ "$elapsed" -ge "$POLL_TIMEOUT" ]; then
-			echo "VM $vm on $kvm_host did not reach 'running' state within ${POLL_TIMEOUT}s (last output: '${output:-<no output - ssh unreachable>}') - aborting"
+			echo "VM $vm on $kvm_host did not reach 'running' state within ${POLL_TIMEOUT}s - aborting. Last output:"
+			echo "${output:-<no output - ssh unreachable>}" | sed 's/^/    /'
 			exit 1
 		fi
 
-		if [ -n "$output" ]; then
-			echo "VM $vm on $kvm_host reported: ${output} - attempting to start it"
+		# Only a real domstate result (ssh rc=0) warrants a start attempt - an
+		# ssh failure (host still booting) also leaves $output non-empty, which
+		# previously looked the same and triggered a doomed `virsh start` over
+		# the same unreachable link.
+		if [ "$rc" -eq 0 ]; then
+			echo "VM $vm on $kvm_host reported:"
+			echo "${output}" | sed 's/^/    /'
+			echo "Attempting to start it..."
 			ssh $SSH_OPTIONS "$kvm_host" "virsh --connect qemu:///system start '$vm'" 2>&1 | sed "s/^/[$kvm_host] /"
 		else
-			echo "$kvm_host not yet reachable via ssh, retrying in ${POLL_INTERVAL}s..."
+			echo "$kvm_host not yet reachable via ssh:"
+			echo "${output}" | sed 's/^/    /'
+			echo "Retrying in ${POLL_INTERVAL}s..."
 		fi
 
 		sleep "$POLL_INTERVAL"
