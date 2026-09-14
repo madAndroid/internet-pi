@@ -55,6 +55,14 @@ esac
 ### Permanently added..." noise.
 SSH_OPTIONS="-o ConnectTimeout=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR"
 
+### Probes TCP/22 with netcat so an unreachable host is skipped outright
+### instead of tying up a background job for the full SSH ConnectTimeout
+### above (kept as a belt-and-braces fallback in case nc misreports a host
+### as up).
+ssh_port_up() {
+	nc -z -w 3 "$1" 22 2>/dev/null
+}
+
 echo -e "\nShutdown starting at: $(date)\n"
 
 if [ "$DO_K8S" = true ]; then
@@ -221,10 +229,17 @@ if [ "$DO_K8S" = true ]; then
 	pids=()
 	for srv in lab-kvm-0{1,2,3}; do
 		echo "$srv"
+		if ! ssh_port_up "$srv"; then
+			echo "$srv: port 22 unreachable - skipping"
+			continue
+		fi
 		timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS $srv "sudo shutdown -h now" &
 		pids+=($!)
 	done
-	wait "${pids[@]}"
+	# wait with no arguments at all (i.e. every host skipped above) falls back
+	# to waiting on every child instead, including the `tee` from the exec
+	# redirect - see the note near the top of this script.
+	[ "${#pids[@]}" -gt 0 ] && wait "${pids[@]}"
 fi
 
 if [ "$DO_NAS" = true ]; then
@@ -232,22 +247,34 @@ if [ "$DO_NAS" = true ]; then
 	pids=()
 	for nas in nas-storage; do
 		echo "$nas"
+		if ! ssh_port_up "$nas"; then
+			echo "$nas: port 22 unreachable - skipping"
+			continue
+		fi
 		timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS admin@$nas "sudo poweroff" &
 		pids+=($!)
 	done
-	wait "${pids[@]}"
+	[ "${#pids[@]}" -gt 0 ] && wait "${pids[@]}"
 	#echo "STORAGE NAS SHUTDOWN DISABLED"
 fi
 
 if [ "$DO_EXTRA" = true ]; then
     echo "Shutting down linux desktop machine:"
     pids=()
-    timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS desktop "sudo shutdown -h now" &
-    pids+=($!)
+    if ssh_port_up desktop; then
+        timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS desktop "sudo shutdown -h now" &
+        pids+=($!)
+    else
+        echo "desktop: port 22 unreachable - skipping"
+    fi
     ## Mac mini will shut off with Lounge Plug
-    timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS macmini "sudo shutdown -h now" &
-    pids+=($!)
-    wait "${pids[@]}"
+    if ssh_port_up macmini; then
+        timeout -k 3 "${TIMEOUT}" ssh $SSH_OPTIONS macmini "sudo shutdown -h now" &
+        pids+=($!)
+    else
+        echo "macmini: port 22 unreachable - skipping"
+    fi
+    [ "${#pids[@]}" -gt 0 ] && wait "${pids[@]}"
     #echo "Shutting down media NAS machine:"
     #for nas in nas-media; do echo $nas; ssh $SSH_OPTIONS admin@$nas "sudo poweroff"; sleep 3; done
 fi
