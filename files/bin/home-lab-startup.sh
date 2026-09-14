@@ -35,6 +35,13 @@ fi
 ### Permanently added..." noise, which would otherwise pollute parsed output.
 SSH_OPTIONS="-o ConnectTimeout=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR"
 
+### Probes TCP/22 with netcat so a still-booting host is recognised as
+### unreachable without spawning and waiting out a full ssh attempt each poll
+### (kept as a belt-and-braces fallback in case nc misreports a host as up).
+ssh_port_up() {
+	nc -z -w 3 "$1" 22 2>/dev/null
+}
+
 ### Talos control-plane and worker nodes (kubectl sees them by their short
 ### hostname - set via HostnameConfig with no domain suffix - while
 ### talosctl talks to each node's static IP directly, since that's what's
@@ -68,15 +75,20 @@ ensure_kvm_vm_running() {
 	local elapsed=0 output state rc
 
 	while true; do
-		# --connect qemu:///system: a bare `virsh` over a non-interactive ssh
-		# command falls back to qemu:///session (no domains there).
-		output=$(ssh $SSH_OPTIONS "$kvm_host" "virsh --connect qemu:///system domstate '$vm'" 2>&1)
-		rc=$?
-		state=$(echo "$output" | tr -d '[:space:]')
+		if ssh_port_up "$kvm_host"; then
+			# --connect qemu:///system: a bare `virsh` over a non-interactive ssh
+			# command falls back to qemu:///session (no domains there).
+			output=$(ssh $SSH_OPTIONS "$kvm_host" "virsh --connect qemu:///system domstate '$vm'" 2>&1)
+			rc=$?
+			state=$(echo "$output" | tr -d '[:space:]')
 
-		if [ "$state" == "running" ]; then
-			echo "VM $vm on $kvm_host is running"
-			return
+			if [ "$state" == "running" ]; then
+				echo "VM $vm on $kvm_host is running"
+				return
+			fi
+		else
+			rc=1
+			output="port 22 unreachable"
 		fi
 
 		if [ "$elapsed" -ge "$POLL_TIMEOUT" ]; then
