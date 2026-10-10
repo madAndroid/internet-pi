@@ -59,8 +59,12 @@ else
 fi
 
 echo
-echo "Creating Grafana Postgres backup..."
-su - postgres -c "pg_dump grafana" > ${POSTGRESQL_BACKUP_DIR}/grafana-${TIMESTAMP}.sql
+echo "Creating PostgreSQL backups (consolidated 'postgres' container)..."
+mkdir -p "${POSTGRESQL_BACKUP_DIR}"
+for db in grafana atuin; do
+    echo "  dumping ${db}..."
+    docker exec postgres pg_dump -U postgres "${db}" > "${POSTGRESQL_BACKUP_DIR}/${db}-${TIMESTAMP}.sql"
+done
 find ${POSTGRESQL_BACKUP_DIR} -ctime +7 -type f -delete
 
 echo

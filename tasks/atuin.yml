@@ -3,6 +3,11 @@
   community.sops.load_vars:
     file: "{{ playbook_dir }}/secrets/atuin.enc.yml"
 
+- name: Ensure the shared pg-net Docker network exists.
+  community.docker.docker_network:
+    name: pg-net
+  become: false
+
 - name: Ensure Atuin directories exist.
   ansible.builtin.file:
     path: "{{ config_dir }}/atuin/{{ item }}"
@@ -38,4 +43,7 @@
   community.docker.docker_compose_v2:
     project_src: "{{ config_dir }}/atuin/"
     build: never
+    # Removes the former in-stack atuin-db / atuin-db-dumper containers once the
+    # database has been migrated to the consolidated `postgres` instance.
+    remove_orphans: true
   become: false

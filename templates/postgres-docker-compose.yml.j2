@@ -1,0 +1,52 @@
+# {{ ansible_managed }}
+---
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:{{ postgres_image_tag }}
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD}
+      TZ: {{ postgres_timezone }}
+      PGTZ: {{ postgres_timezone }}
+    volumes:
+      # Don't remove this volume - it holds the grafana and atuin databases.
+      # Postgres 18+ requires the mount at /var/lib/postgresql (data lands in a
+      # major-version subdir); mounting .../data makes the entrypoint refuse to start.
+      - "pgdata:/var/lib/postgresql"
+    networks:
+      - pg-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backup:
+    container_name: postgres-db-dumper
+    image: prodrigestivill/postgres-backup-local:{{ postgres_backup_image_tag }}
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST: postgres
+      # Space/comma-separated list - dumps every consolidated database.
+      POSTGRES_DB: "{{ postgres_databases | join(',') }}"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD}
+      SCHEDULE: "@daily"
+      BACKUP_DIR: /db_dumps
+      TZ: {{ postgres_timezone }}
+    volumes:
+      - "./db_dumps:/db_dumps"
+    networks:
+      - pg-net
+    depends_on:
+      - postgres
+
+networks:
+  pg-net:
+    name: pg-net
+    external: true
+
+volumes:
+  pgdata:

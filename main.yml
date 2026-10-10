@@ -33,9 +33,17 @@
     - name: Sync user bin scripts.
       ansible.builtin.import_tasks: tasks/user-bin.yml
 
+    - name: Set up backup automation.
+      ansible.builtin.import_tasks: tasks/backups.yml
+      when: backups_enable | default(false)
+
     - name: Set up HAproxy.
       ansible.builtin.import_tasks: tasks/haproxy.yml
       when: task_haproxy_enable | default(false)
+
+    - name: Set up consolidated PostgreSQL.
+      ansible.builtin.import_tasks: tasks/postgres.yml
+      when: postgres_enable | default(false)
 
     - name: Set up Internet Monitoring.
       ansible.builtin.import_tasks: tasks/internet-monitoring.yml

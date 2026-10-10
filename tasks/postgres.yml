@@ -1,0 +1,110 @@
+---
+- name: Load consolidated PostgreSQL secrets.
+  community.sops.load_vars:
+    file: "{{ playbook_dir }}/secrets/postgres.enc.yml"
+
+- name: Load Atuin secrets (atuin role password is reused by the shared instance).
+  community.sops.load_vars:
+    file: "{{ playbook_dir }}/secrets/atuin.enc.yml"
+
+- name: Ensure the shared pg-net Docker network exists.
+  community.docker.docker_network:
+    name: pg-net
+  become: false
+
+- name: Ensure PostgreSQL directories exist.
+  ansible.builtin.file:
+    path: "{{ config_dir }}/postgres/{{ item }}"
+    state: directory
+    mode: 0755
+  become: false
+  loop:
+    - ""
+    - db_dumps
+
+- name: Write PostgreSQL superuser credentials.
+  ansible.builtin.copy:
+    content: |
+      POSTGRES_SUPERUSER_PASSWORD={{ postgres_superuser_password }}
+    dest: "{{ config_dir }}/postgres/.env"
+    mode: '0600'
+  no_log: true
+  become: false
+  notify: Restart postgres
+
+- name: Copy PostgreSQL docker-compose template to host.
+  ansible.builtin.template:
+    src: templates/postgres-docker-compose.yml.j2
+    dest: "{{ config_dir }}/postgres/docker-compose.yml"
+    mode: '0640'
+  become: false
+  notify: Restart postgres
+
+- name: Ensure the consolidated PostgreSQL instance is running.
+  community.docker.docker_compose_v2:
+    project_src: "{{ config_dir }}/postgres/"
+    build: never
+  become: false
+
+- name: Wait until PostgreSQL is accepting connections.
+  ansible.builtin.command:
+    cmd: docker exec postgres pg_isready -U postgres
+  become: false
+  register: pg_ready
+  until: pg_ready.rc == 0
+  retries: 30
+  delay: 2
+  changed_when: false
+
+- name: Ensure application roles and databases exist (idempotent).
+  # Executed over the container's local socket, which uses trust auth, so no
+  # superuser password is needed here. Role passwords are set/kept in sync.
+  ansible.builtin.shell:
+    cmd: |
+      docker exec -i postgres psql -U postgres -d postgres -v ON_ERROR_STOP=1 <<'SQL'
+      SELECT 'CREATE ROLE grafana LOGIN'
+        WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'grafana')\gexec
+      ALTER ROLE grafana WITH LOGIN PASSWORD '{{ monitoring_grafana_db_password }}';
+      SELECT 'CREATE DATABASE grafana OWNER grafana'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'grafana')\gexec
+      SELECT 'CREATE ROLE atuin LOGIN'
+        WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'atuin')\gexec
+      ALTER ROLE atuin WITH LOGIN PASSWORD '{{ atuin_db_password }}';
+      SELECT 'CREATE DATABASE atuin OWNER atuin'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'atuin')\gexec
+      SQL
+    executable: /bin/bash
+  no_log: true
+  become: false
+  changed_when: true
+
+# --- One-time data migration (guarded by marker files, source data left intact) ---
+
+- name: Migrate the grafana database from the native host PostgreSQL.
+  ansible.builtin.shell:
+    cmd: >
+      set -o pipefail &&
+      docker exec -e PGPASSWORD='{{ monitoring_grafana_db_source_password }}' postgres
+      pg_dump -h {{ grafana_db_source_host }} -p {{ grafana_db_source_port }}
+      -U {{ grafana_db_source_user }} --no-owner --no-privileges --no-acl {{ grafana_db_source_name }}
+      | docker exec -i -e PGPASSWORD='{{ monitoring_grafana_db_password }}' postgres
+      psql -U grafana -d grafana -v ON_ERROR_STOP=1
+      && touch {{ config_dir }}/postgres/.migrated_grafana
+    creates: "{{ config_dir }}/postgres/.migrated_grafana"
+    executable: /bin/bash
+  no_log: true
+  become: false
+
+- name: Migrate the atuin database from the existing atuin-db container.
+  ansible.builtin.shell:
+    cmd: >
+      set -o pipefail &&
+      docker exec -e PGPASSWORD='{{ atuin_db_password }}' atuin-db
+      pg_dump -h localhost -U {{ atuin_db_username }} --no-owner --no-privileges --no-acl {{ atuin_db_name }}
+      | docker exec -i -e PGPASSWORD='{{ atuin_db_password }}' postgres
+      psql -U atuin -d atuin -v ON_ERROR_STOP=1
+      && touch {{ config_dir }}/postgres/.migrated_atuin
+    creates: "{{ config_dir }}/postgres/.migrated_atuin"
+    executable: /bin/bash
+  no_log: true
+  become: false

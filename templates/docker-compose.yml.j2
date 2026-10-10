@@ -10,6 +10,9 @@ networks:
     name: internet-monitoring-front-tier
   back-tier:
     name: internet-monitoring-back-tier
+  pg-net:
+    name: pg-net
+    external: true
 
 services:
 {% if domain_name_enable %}
@@ -109,6 +112,7 @@ services:
     networks:
       - back-tier
       - front-tier
+      - pg-net
     depends_on:
       - prometheus
     environment:

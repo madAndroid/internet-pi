@@ -25,18 +25,51 @@ homarr_image_tag: v1.58.1
 gotify_image_tag: 2.6.3
 nginx_image_tag: 1.28.1
 
+# Consolidated PostgreSQL instance (hosts the grafana and atuin databases).
+# Superuser + grafana passwords are SOPS-encrypted in secrets/postgres.enc.yml.
+postgres_enable: true
+postgres_image_tag: 18
+postgres_backup_image_tag: 18
+postgres_timezone: Africa/Johannesburg
+postgres_databases:
+  - grafana
+  - atuin
+# One-time migration source: the self-managed native PostgreSQL that currently
+# holds the Grafana database. Left untouched by the migration (read-only dump).
+grafana_db_source_host: 192.168.88.110
+grafana_db_source_port: 5432
+grafana_db_source_user: grafana
+grafana_db_source_name: grafana
+monitoring_grafana_db_source_password: grafana
+
 # Atuin shell history sync server (https://docs.atuin.sh/latest/self-hosting/docker/).
-# DB password is SOPS-encrypted in secrets/atuin.enc.yml.
+# DB password is SOPS-encrypted in secrets/atuin.enc.yml; the database now lives
+# on the consolidated `postgres` instance above.
 atuin_enable: true
 atuin_image_tag: 18.23.0
-atuin_postgres_image_tag: 18
-atuin_backup_image_tag: 18
 atuin_port: 8888
 atuin_timezone: Africa/Johannesburg
 atuin_db_name: atuin
 atuin_db_username: atuin
 # Set to true temporarily to register a new account, then back to false.
 atuin_open_registration: false
+
+# Backup automation. The scripts themselves live in files/bin/ and are deployed
+# to ~/bin via the user-bin sync; this schedules them as /etc/cron.d resources.
+backups_enable: true
+backup_bin_dir: "/home/{{ ansible_user }}/bin"
+backup_log_dir: /var/lib/backups/log
+backup_jobs:
+  - name: zimaboard-file-backup
+    script: zimaboard-file-backup.sh
+    log: file-backup.log
+    minute: "0"
+    hour: "*/2"
+  - name: zimaboard-data-backup
+    script: zimaboard-data-backup.sh
+    log: data-backup.log
+    minute: "30"
+    hour: "0,6,12,18"
 
 # Internet monitoring configuration.
 monitoring_enable: true

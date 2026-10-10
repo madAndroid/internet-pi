@@ -1,0 +1,27 @@
+---
+- name: Ensure the backup log directory exists.
+  ansible.builtin.file:
+    path: "{{ backup_log_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Remove legacy hand-added backup jobs from root's personal crontab.
+  # These are now managed declaratively in /etc/cron.d/zimaboard-backups below;
+  # strip the old unmanaged lines so the jobs don't run twice.
+  ansible.builtin.lineinfile:
+    path: /var/spool/cron/crontabs/root
+    regexp: 'bin/zimaboard-(file|data)-backup\.sh'
+    state: absent
+  failed_when: false
+
+- name: Schedule the Zimaboard backup jobs.
+  ansible.builtin.cron:
+    name: "{{ item.name }}"
+    user: root
+    cron_file: zimaboard-backups
+    minute: "{{ item.minute }}"
+    hour: "{{ item.hour }}"
+    job: "{{ backup_bin_dir }}/{{ item.script }} >> {{ backup_log_dir }}/{{ item.log }}"
+  loop: "{{ backup_jobs }}"
