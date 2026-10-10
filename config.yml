@@ -35,8 +35,8 @@ atuin_port: 8888
 atuin_timezone: Africa/Johannesburg
 atuin_db_name: atuin
 atuin_db_username: atuin
-# Leave open to register your first account, then set to false and re-run.
-atuin_open_registration: true
+# Set to true temporarily to register a new account, then back to false.
+atuin_open_registration: false
 
 # Internet monitoring configuration.
 monitoring_enable: true
