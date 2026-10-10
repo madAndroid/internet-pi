@@ -9,7 +9,8 @@ services:
     volumes:
       - "./config:/config"
     ports:
-      - "{{ atuin_port }}:8888"
+      # Localhost only - TLS is terminated by HAProxy (atuin.int.stangl.co.za).
+      - "127.0.0.1:{{ atuin_port }}:8888"
     environment:
       ATUIN_HOST: "0.0.0.0"
       ATUIN_OPEN_REGISTRATION: "{{ atuin_open_registration | lower }}"
