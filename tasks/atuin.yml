@@ -1,0 +1,41 @@
+---
+- name: Load Atuin secrets.
+  community.sops.load_vars:
+    file: "{{ playbook_dir }}/secrets/atuin.enc.yml"
+
+- name: Ensure Atuin directories exist.
+  ansible.builtin.file:
+    path: "{{ config_dir }}/atuin/{{ item }}"
+    state: directory
+    mode: 0755
+  become: false
+  loop:
+    - ""
+    # Atuin runs as UID/GID 1000 and must own its config directory.
+    - config
+
+- name: Copy Atuin docker-compose template to Pi.
+  ansible.builtin.template:
+    src: templates/atuin-docker-compose.yml.j2
+    dest: "{{ config_dir }}/atuin/docker-compose.yml"
+    mode: '0640'
+  become: false
+  notify: Restart atuin
+
+- name: Write Atuin database credentials.
+  ansible.builtin.copy:
+    content: |
+      ATUIN_DB_NAME={{ atuin_db_name }}
+      ATUIN_DB_USERNAME={{ atuin_db_username }}
+      ATUIN_DB_PASSWORD={{ atuin_db_password }}
+    dest: "{{ config_dir }}/atuin/.env"
+    mode: '0600'
+  no_log: true
+  become: false
+  notify: Restart atuin
+
+- name: Ensure Atuin server is running.
+  community.docker.docker_compose_v2:
+    project_src: "{{ config_dir }}/atuin/"
+    build: never
+  become: false

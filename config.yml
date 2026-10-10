@@ -25,6 +25,19 @@ homarr_image_tag: v1.58.1
 gotify_image_tag: 2.6.3
 nginx_image_tag: 1.28.1
 
+# Atuin shell history sync server (https://docs.atuin.sh/latest/self-hosting/docker/).
+# DB password is SOPS-encrypted in secrets/atuin.enc.yml.
+atuin_enable: true
+atuin_image_tag: 18.23.0
+atuin_postgres_image_tag: 18
+atuin_backup_image_tag: 18
+atuin_port: 8888
+atuin_timezone: Africa/Johannesburg
+atuin_db_name: atuin
+atuin_db_username: atuin
+# Leave open to register your first account, then set to false and re-run.
+atuin_open_registration: true
+
 # Internet monitoring configuration.
 monitoring_enable: true
 monitoring_speedtest_interval: 5m
