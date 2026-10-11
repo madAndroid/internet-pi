@@ -114,11 +114,17 @@ restic --password-file /etc/restic-password --repo ${RESTIC_REPO} \
 
 echo
 echo "Pruning old backups..."
+# Grouped by host: the Prometheus snapshot path changes every run, so the default
+# grouping (host + paths) would put each run in its own group and never prune.
 restic --password-file /etc/restic-password --repo ${RESTIC_REPO} \
     --keep-hourly 12 --keep-daily 7 --keep-weekly 4 --keep-monthly 3 \
-    --verbose forget --prune
+    --group-by host --verbose forget --prune
 
 NFS_ROOT="/mnt/NFS/Backups"
+
+# The share is autofs-mounted on demand: touch a path inside it first so the
+# mountpoint check below sees it mounted (mountpoint -q alone doesn't trigger it).
+ls "${NFS_ROOT}/" > /dev/null 2>&1 || true
 
 if mountpoint -q "${NFS_ROOT}"; then
     mkdir -p "${NFS_MOUNT}"

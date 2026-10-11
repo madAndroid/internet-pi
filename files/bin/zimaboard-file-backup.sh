@@ -54,6 +54,10 @@ restic --password-file /etc/restic-password --repo ${RESTIC_REPO} \
 
 NFS_ROOT="/mnt/NFS/Backups"
 
+# The share is autofs-mounted on demand: touch a path inside it first so the
+# mountpoint check below sees it mounted (mountpoint -q alone doesn't trigger it).
+ls "${NFS_ROOT}/" > /dev/null 2>&1 || true
+
 if mountpoint -q "${NFS_ROOT}"; then
     mkdir -p "${NFS_MOUNT}"
     if touch "${NFS_MOUNT}/test"; then
