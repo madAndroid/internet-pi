@@ -259,10 +259,12 @@ services:
         max-file: "3"           # Keep a maximum of 3 log files
 
   homebox:
-    image: ghcr.io/sysadminsmedia/homebox:latest
+    image: ghcr.io/sysadminsmedia/homebox:{{ homebox_image_tag }}
     restart: always
     environment:
       - HBOX_LOG_LEVEL=info
+      # Supplied via .env (from secrets/homebox.enc.yml); rotating it invalidates all issued API keys.
+      - HBOX_AUTH_API_KEY_PEPPER=${HBOX_AUTH_API_KEY_PEPPER:?HBOX_AUTH_API_KEY_PEPPER must be set}
       - HBOX_LOG_FORMAT=text
       - HBOX_WEB_MAX_UPLOAD_SIZE=10
       # Please consider allowing analytics to help us improve Homebox (basic computer information, no personal data)

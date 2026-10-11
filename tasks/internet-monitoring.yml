@@ -62,6 +62,20 @@
   notify: Restart internet-monitoring
   become: false
 
+- name: Load Homebox secrets.
+  community.sops.load_vars:
+    file: "{{ playbook_dir }}/secrets/homebox.enc.yml"
+
+- name: Write internet-monitoring environment secrets.
+  ansible.builtin.copy:
+    content: |
+      HBOX_AUTH_API_KEY_PEPPER={{ homebox_api_key_pepper }}
+    dest: "{{ config_dir }}/internet-monitoring/.env"
+    mode: '0600'
+  no_log: true
+  notify: Restart internet-monitoring
+  become: false
+
 - name: Ensure internet-monitoring environment is running.
   community.docker.docker_compose_v2:
     project_src: "{{ config_dir }}/internet-monitoring/"
