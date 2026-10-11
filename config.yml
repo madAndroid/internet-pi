@@ -63,9 +63,13 @@ atuin_open_registration: false
 
 # Backup automation. The scripts themselves live in files/bin/ and are deployed
 # to ~/bin via the user-bin sync; this schedules them as /etc/cron.d resources.
-# The scripts log themselves to ~/log/{file,data}-backup.log (like the startup scripts).
+# Every script in ~/bin writes a new timestamped log per run to ~/logs
+# (files/bin/lib/common.sh); a daily job prunes logs older than logs_retention_days.
+# Backup failures are pushed to Gotify using the app token in secrets/gotify.enc.yml.
 backups_enable: true
 backup_bin_dir: "/home/{{ ansible_user }}/bin"
+logs_dir: "/home/{{ ansible_user }}/logs"
+logs_retention_days: 180
 backup_jobs:
   - name: zimaboard-file-backup
     script: zimaboard-file-backup.sh

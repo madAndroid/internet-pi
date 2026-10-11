@@ -1,4 +1,17 @@
 ---
+- name: Load Gotify secrets.
+  community.sops.load_vars:
+    file: "{{ playbook_dir }}/secrets/gotify.enc.yml"
+
+- name: Install the Gotify app token used for backup failure notifications.
+  ansible.builtin.copy:
+    content: "{{ gotify_backup_token }}"
+    dest: /etc/gotify-backup-token
+    owner: root
+    group: root
+    mode: '0600'
+  no_log: true
+
 - name: Remove legacy hand-added backup jobs from root's personal crontab.
   # These are now managed declaratively in /etc/cron.d/zimaboard-backups below;
   # strip the old unmanaged lines so the jobs don't run twice.
@@ -15,6 +28,6 @@
     cron_file: zimaboard-backups
     minute: "{{ item.minute }}"
     hour: "{{ item.hour }}"
-    # The scripts tee their own output to ~/log, so cron's copy is discarded.
+    # The scripts tee their own output to ~/logs, so cron's copy is discarded.
     job: "{{ backup_bin_dir }}/{{ item.script }} > /dev/null 2>&1"
   loop: "{{ backup_jobs }}"

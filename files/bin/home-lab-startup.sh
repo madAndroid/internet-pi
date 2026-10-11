@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 
-LOG="${HOME}/log/startup.log"
 TIMEOUT="300"
 
-mkdir -p ~/log
-[ -f ${LOG} ] || touch ${LOG}
-
-# Tee'd rather than plain-redirected so the script is still useful run
-# interactively (console output) as well as from cron (log file only).
-exec > >(tee -a "${LOG}") 2>&1
+# shellcheck source=lib/common.sh
+source "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/lib/common.sh"
+start_log startup
 
 echo "$(date)"
 

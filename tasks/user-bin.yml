@@ -7,3 +7,21 @@
     delete: true
     perms: true
   become: false
+
+# Created up front as the user, so a root-run backup script never creates it root-owned.
+- name: Ensure the per-run logs directory exists.
+  ansible.builtin.file:
+    path: "{{ logs_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Prune per-run logs older than the retention period.
+  ansible.builtin.cron:
+    name: prune-script-logs
+    user: "{{ ansible_user }}"
+    cron_file: script-logs
+    minute: "15"
+    hour: "3"
+    job: "find {{ logs_dir }} -maxdepth 1 -type f -name '*.log' -mtime +{{ logs_retention_days }} -delete"
