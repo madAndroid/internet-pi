@@ -63,18 +63,16 @@ atuin_open_registration: false
 
 # Backup automation. The scripts themselves live in files/bin/ and are deployed
 # to ~/bin via the user-bin sync; this schedules them as /etc/cron.d resources.
+# The scripts log themselves to ~/log/{file,data}-backup.log (like the startup scripts).
 backups_enable: true
 backup_bin_dir: "/home/{{ ansible_user }}/bin"
-backup_log_dir: /var/lib/backups/log
 backup_jobs:
   - name: zimaboard-file-backup
     script: zimaboard-file-backup.sh
-    log: file-backup.log
     minute: "0"
     hour: "*/2"
   - name: zimaboard-data-backup
     script: zimaboard-data-backup.sh
-    log: data-backup.log
     minute: "30"
     hour: "0,6,12,18"
 

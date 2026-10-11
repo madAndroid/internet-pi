@@ -2,6 +2,18 @@
 
 set -eu -o pipefail
 
+# Log alongside the startup/shutdown scripts in ~/log. This runs as root from
+# cron, so resolve the directory from the script's location (~/bin/../log)
+# rather than ${HOME}.
+LOG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/log"
+LOG="${LOG_DIR}/file-backup.log"
+mkdir -p "${LOG_DIR}"
+[ -f "${LOG}" ] || touch "${LOG}"
+
+# Tee'd rather than plain-redirected so the script is still useful run
+# interactively (console output) as well as from cron (log file only).
+exec > >(tee -a "${LOG}") 2>&1
+
 DEBUG=${DEBUG:-}
 if [ -n "$DEBUG" ]; then
     set -x
