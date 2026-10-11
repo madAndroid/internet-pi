@@ -21,7 +21,7 @@ shelly_exporter_image_tag: 0.5.10-8637605
 speedtest_exporter_image_tag: v3.5.4
 netalertx_image_tag: 26.4.6
 loki_image_tag: 2.9.4
-homarr_image_tag: v1.58.1
+homarr_image_tag: v2.4.1
 gotify_image_tag: 2.6.3
 nginx_image_tag: 1.28.1
 # Homebox API key pepper and DB password are SOPS-encrypted in secrets/homebox.enc.yml;

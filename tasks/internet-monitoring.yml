@@ -27,6 +27,12 @@
     state: absent
   become: false
 
+# Loaded here (not only in postgres.yml) so the Grafana DB password is correct
+# even when that role is skipped, e.g. with --start-at-task.
+- name: Load consolidated PostgreSQL secrets (Grafana DB password).
+  community.sops.load_vars:
+    file: "{{ playbook_dir }}/secrets/postgres.enc.yml"
+
 - name: Copy templated internet-monitoring files into place.
   ansible.builtin.template:
     src: templates/{{ item.src }}
