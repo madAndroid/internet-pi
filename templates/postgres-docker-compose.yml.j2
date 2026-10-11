@@ -11,7 +11,7 @@ services:
       TZ: {{ postgres_timezone }}
       PGTZ: {{ postgres_timezone }}
     volumes:
-      # Don't remove this volume - it holds the grafana and atuin databases.
+      # Don't remove this volume - it holds the grafana, atuin and homebox databases.
       # Postgres 18+ requires the mount at /var/lib/postgresql (data lands in a
       # major-version subdir); mounting .../data makes the entrypoint refuse to start.
       - "pgdata:/var/lib/postgresql"

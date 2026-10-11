@@ -2,62 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Common Commands
+## Gotchas
 
-```bash
-# Install required Ansible collections
-ansible-galaxy collection install -r requirements.yml
-
-# Run the full playbook against the Pi
-ansible-playbook main.yml
-
-# Run only specific tasks via tags (use --tags or limit with --start-at-task)
-ansible-playbook main.yml --tags monitoring
-ansible-playbook main.yml --tags pihole
-
-# Lint
-yamllint .
-ansible-lint
-
-# Decrypt SOPS-encrypted secrets (requires the age key in your keyring)
-sops -d secrets/alertmanager.enc.yml
-```
-
-Tool versions are managed via asdf (see `.tool-versions`): Python 3.10.5, SOPS 3.8.1.
-
-## Architecture
-
-**Entry point**: `main.yml` — the sole playbook. It:
-1. Loads `config.yml` as vars
-2. Conditionally includes tasks from `tasks/` based on boolean flags in config
-
-**Feature flags in `config.yml`** control everything:
-- `task_haproxy_enable` → `tasks/haproxy.yml`
-- `monitoring_enable` → `tasks/internet-monitoring.yml`
-- `pihole_enable` → `tasks/pi-hole.yml`
-- `airgradient_enable` → `tasks/airgradient.yml`
-- `starlink_enable` → `tasks/starlink.yml`
-
-**Templates (`templates/*.j2`)** are rendered to the target host. The most complex are:
-- `docker-compose.yml.j2` — main monitoring stack (Prometheus, Grafana, Blackbox, Speedtest, Loki, Homarr, Gotify, NetAlertX, Nginx)
-- `prometheus.yml.j2` — scrape configuration; conditionally includes Shelly, AirGradient, Starlink, and extra job definitions from `monitoring_extra_configs`
-- `prometheus-pinghosts.yaml.j2`, `prometheus-lab-hosts.yaml.j2`, `prometheus-essential-hosts.yaml.j2` — file-based service discovery targets driven by `monitoring_ping_hosts`, `monitoring_lab_hosts`, `monitoring_essential_hosts` lists
-
-**Static files (`files/`)** are copied verbatim — notably `files/haproxy/haproxy.cfg`, which is the full HAProxy config for K8s API load-balancing and internal service routing.
-
-**Secrets**: `secrets/alertmanager.enc.yml` is encrypted with SOPS/age. The age public key is in `.sops.yaml`. Decryption happens automatically during playbook runs via the `community.sops` collection.
-
-## Key Configuration Concepts
-
-- **Target host**: `192.168.88.110` (`internet_pi` group in `inventory.ini`), user `andrew`
-- **Install prefix**: `config_dir: "~"` — everything lands under the ansible user's home directory
-- **Prometheus retention**: 4 years (`monitoring_prometheus_extra_args`)
-- **Shelly devices**: Defined as a list in `config.yml` under `monitoring_extra_configs`; the Shelly exporter uses file-based service discovery with `shelly/config.yaml`
-- **Image tags**: All Docker image versions are pinned as `*_image_tag` vars in `config.yml` — bump them there when upgrading
-
-## YAML Lint Rules
-
-Max line length is 120 characters (warning only). The `secrets/` directory and `.github/workflows/stale.yml` are excluded from yamllint. Ansible-lint skips `fqcn-builtins` and `no-handler`.
+- `main.yml` defines no tags, so `--tags <x>` runs nothing. Limit a run with `--start-at-task` or by toggling the `*_enable` flags in `config.yml`.
+- `--start-at-task` also skips the `pre_tasks` that load `config.yml`, so pass it explicitly: `ansible-playbook main.yml -e @config.yml --start-at-task "<task name>"`.
+- Ansible refuses to run from Claude Code's `!` prompt ("Non-blocking file handles detected"). Run it in a normal terminal, or pipe its output through `cat` with stdin from `/dev/null`.
+- Secrets in `secrets/` are SOPS/age-encrypted and decrypted automatically during playbook runs via `community.sops`. Both that and manual `sops -d secrets/alertmanager.enc.yml` require the age private key in your keyring.
+- All Docker image versions are pinned as `*_image_tag` vars in `config.yml` — bump them there when upgrading.
 
 ---
 

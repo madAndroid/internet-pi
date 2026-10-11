@@ -265,14 +265,25 @@ services:
       - HBOX_LOG_LEVEL=info
       # Supplied via .env (from secrets/homebox.enc.yml); rotating it invalidates all issued API keys.
       - HBOX_AUTH_API_KEY_PEPPER=${HBOX_AUTH_API_KEY_PEPPER:?HBOX_AUTH_API_KEY_PEPPER must be set}
+      # Database lives on the consolidated `postgres` instance (reached over pg-net).
+      - HBOX_DATABASE_DRIVER=postgres
+      - HBOX_DATABASE_HOST=postgres
+      - HBOX_DATABASE_PORT=5432
+      - HBOX_DATABASE_DATABASE=homebox
+      - HBOX_DATABASE_USERNAME=homebox
+      - HBOX_DATABASE_PASSWORD=${HBOX_DATABASE_PASSWORD:?HBOX_DATABASE_PASSWORD must be set}
+      - HBOX_DATABASE_SSL_MODE=disable
       - HBOX_LOG_FORMAT=text
       - HBOX_WEB_MAX_UPLOAD_SIZE=10
       # Please consider allowing analytics to help us improve Homebox (basic computer information, no personal data)
       - HBOX_OPTIONS_ALLOW_ANALYTICS=false
     volumes:
+      # Still holds attachments, plus the pre-Postgres homebox.db (kept as a fallback).
       - homebox_data:/data/
     ports:
       - 3110:7745
+    networks:
+      - pg-net
 
   gotify:
     image: gotify/server:{{ gotify_image_tag }}

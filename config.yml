@@ -11,7 +11,7 @@ pihole_hostname: pihole
 pihole_timezone: Africa/Johannesburg
 pihole_password: "JPdk11Kv"
 pihole_web_port: 8080
-pihole_image_tag: 2026.06.0
+pihole_image_tag: 2026.09.0
 
 grafana_image_tag: 9.5.3
 prometheus_image_tag: v2.44.0
@@ -24,10 +24,11 @@ loki_image_tag: 2.9.4
 homarr_image_tag: v1.58.1
 gotify_image_tag: 2.6.3
 nginx_image_tag: 1.28.1
-# Homebox API key pepper is SOPS-encrypted in secrets/homebox.enc.yml.
+# Homebox API key pepper and DB password are SOPS-encrypted in secrets/homebox.enc.yml;
+# its database lives on the consolidated `postgres` instance above.
 homebox_image_tag: 0.26.2
 
-# Consolidated PostgreSQL instance (hosts the grafana and atuin databases).
+# Consolidated PostgreSQL instance (hosts the grafana, atuin and homebox databases).
 # Superuser + grafana passwords are SOPS-encrypted in secrets/postgres.enc.yml.
 postgres_enable: true
 postgres_image_tag: 18
@@ -36,6 +37,7 @@ postgres_timezone: Africa/Johannesburg
 postgres_databases:
   - grafana
   - atuin
+  - homebox
 # One-time migration source: the self-managed native PostgreSQL that currently
 # holds the Grafana database. Left untouched by the migration (read-only dump).
 grafana_db_source_host: 192.168.88.110

@@ -7,6 +7,10 @@
   community.sops.load_vars:
     file: "{{ playbook_dir }}/secrets/atuin.enc.yml"
 
+- name: Load Homebox secrets (homebox role password is reused by the shared instance).
+  community.sops.load_vars:
+    file: "{{ playbook_dir }}/secrets/homebox.enc.yml"
+
 - name: Ensure the shared pg-net Docker network exists.
   community.docker.docker_network:
     name: pg-net
@@ -72,6 +76,11 @@
       ALTER ROLE atuin WITH LOGIN PASSWORD '{{ atuin_db_password }}';
       SELECT 'CREATE DATABASE atuin OWNER atuin'
         WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'atuin')\gexec
+      SELECT 'CREATE ROLE homebox LOGIN'
+        WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'homebox')\gexec
+      ALTER ROLE homebox WITH LOGIN PASSWORD '{{ homebox_db_password }}';
+      SELECT 'CREATE DATABASE homebox OWNER homebox'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'homebox')\gexec
       SQL
     executable: /bin/bash
   no_log: true
