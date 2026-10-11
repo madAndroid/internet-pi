@@ -196,8 +196,19 @@ services:
       - SECRET_ENCRYPTION_KEY=ad95c1aeeb5510c378ac2fb14e226c14ed7211a3796eb7d814b077c9d5770e30
       - NEXTAUTH_URL=https://homarr.int.stangl.co.za
       - AUTH_URL=https://homarr.int.stangl.co.za
+      # Database lives on the consolidated `postgres` instance (reached over pg-net).
+      - DB_DRIVER=node-postgres
+      - DB_DIALECT=postgresql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=homarr
+      - DB_USER=homarr
+      - DB_PASSWORD=${HOMARR_DB_PASSWORD:?HOMARR_DB_PASSWORD must be set}
     ports:
       - '7575:7575'
+    networks:
+      - default
+      - pg-net
 
   netalertx:
     container_name: netalertx                       # The name when you docker contiainer ls

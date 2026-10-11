@@ -72,11 +72,16 @@
   community.sops.load_vars:
     file: "{{ playbook_dir }}/secrets/homebox.enc.yml"
 
+- name: Load Homarr secrets.
+  community.sops.load_vars:
+    file: "{{ playbook_dir }}/secrets/homarr.enc.yml"
+
 - name: Write internet-monitoring environment secrets.
   ansible.builtin.copy:
     content: |
       HBOX_AUTH_API_KEY_PEPPER={{ homebox_api_key_pepper }}
       HBOX_DATABASE_PASSWORD={{ homebox_db_password }}
+      HOMARR_DB_PASSWORD={{ homarr_db_password }}
     dest: "{{ config_dir }}/internet-monitoring/.env"
     mode: '0600'
   no_log: true

@@ -21,6 +21,8 @@ shelly_exporter_image_tag: 0.5.10-8637605
 speedtest_exporter_image_tag: v3.5.4
 netalertx_image_tag: 26.4.6
 loki_image_tag: 2.9.4
+# Homarr DB password is SOPS-encrypted in secrets/homarr.enc.yml; its database
+# lives on the consolidated `postgres` instance.
 homarr_image_tag: v2.4.1
 gotify_image_tag: 2.6.3
 nginx_image_tag: 1.28.1
@@ -28,7 +30,7 @@ nginx_image_tag: 1.28.1
 # its database lives on the consolidated `postgres` instance above.
 homebox_image_tag: 0.26.2
 
-# Consolidated PostgreSQL instance (hosts the grafana, atuin and homebox databases).
+# Consolidated PostgreSQL instance (hosts the grafana, atuin, homebox and homarr databases).
 # Superuser + grafana passwords are SOPS-encrypted in secrets/postgres.enc.yml.
 postgres_enable: true
 postgres_image_tag: 18
@@ -38,6 +40,7 @@ postgres_databases:
   - grafana
   - atuin
   - homebox
+  - homarr
 # One-time migration source: the self-managed native PostgreSQL that currently
 # holds the Grafana database. Left untouched by the migration (read-only dump).
 grafana_db_source_host: 192.168.88.110

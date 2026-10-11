@@ -11,6 +11,10 @@
   community.sops.load_vars:
     file: "{{ playbook_dir }}/secrets/homebox.enc.yml"
 
+- name: Load Homarr secrets (homarr role password is reused by the shared instance).
+  community.sops.load_vars:
+    file: "{{ playbook_dir }}/secrets/homarr.enc.yml"
+
 - name: Ensure the shared pg-net Docker network exists.
   community.docker.docker_network:
     name: pg-net
@@ -81,6 +85,11 @@
       ALTER ROLE homebox WITH LOGIN PASSWORD '{{ homebox_db_password }}';
       SELECT 'CREATE DATABASE homebox OWNER homebox'
         WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'homebox')\gexec
+      SELECT 'CREATE ROLE homarr LOGIN'
+        WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'homarr')\gexec
+      ALTER ROLE homarr WITH LOGIN PASSWORD '{{ homarr_db_password }}';
+      SELECT 'CREATE DATABASE homarr OWNER homarr'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'homarr')\gexec
       SQL
     executable: /bin/bash
   no_log: true
